@@ -3,24 +3,33 @@
     <div class="filter-container">
 <!--      'name', 'id', 'reputation','link','profile image','participation'-->
       <el-checkbox-group v-model="checkboxVal">
-        <el-checkbox label="name">
-          name
+        <el-checkbox label="经费编号">
+          经费编号
         </el-checkbox>
-        <el-checkbox label="id">
-          id
+        <el-checkbox label="经费名称">
+          经费名称
         </el-checkbox>
-        <el-checkbox label="reputation">
-          reputation
+        <el-checkbox label="课题组">
+          课题组
         </el-checkbox>
-        <el-checkbox label="link">
-          link
+        <el-checkbox label="经办人">
+          经办人
         </el-checkbox>
-        <el-checkbox label="participation">
-          participation
+        <el-checkbox label="支出类别一级">
+          支出类别一级
+        </el-checkbox>
+        <el-checkbox label="支出类别二级">
+          支出类别二级
+        </el-checkbox>
+        <el-checkbox label="内容摘要">
+          内容摘要
+        </el-checkbox>
+        <el-checkbox label="支出金额（元）">
+          支出金额（元）
         </el-checkbox>
       </el-checkbox-group>
     </div>
-
+<!--经费编号	经费名称	课题组	经办人	支出类别一级	支出类别二级	内容摘要	支出金额（元）-->
     <el-table :key="key" :data="tableData" border fit highlight-current-row style="width: 100%">
       <el-table-column v-for="fruit in formThead" :key="fruit" :label="fruit">
         <template slot-scope="scope">
@@ -41,7 +50,7 @@
 import axios from 'axios'
 import echarts from 'echarts'
 
-const defaultFormThead = ['name', 'participation']
+const defaultFormThead = ['经费编号','经费名称','课题组','经办人',	'支出类别一级',	'支出类别二级',	'内容摘要',	'支出金额（元）']
 
 export default {
   mounted() {
@@ -54,7 +63,7 @@ export default {
       window.open(row.link, "_blank");
     },
     initChart(){
-      axios.get('http://localhost:9090/MostActiveUsers')
+      axios.get('http://localhost:9090/alldata')
       .then(response => {
         this.chart = echarts.init(document.getElementById('chart-container'))
         for (let i = 0; i < 10; i++) {
@@ -90,7 +99,7 @@ export default {
         // }
       ],
       key: 1, // table key
-      formTheadOptions: ['name', 'id', 'reputation','link','image','participation'],
+      formTheadOptions: ['经费编号','经费名称','课题组','经办人',	'支出类别一级',	'支出类别二级',	'内容摘要',	'支出金额（元）'],
       checkboxVal: defaultFormThead, // checkboxVal
       formThead: defaultFormThead // 默认表头 Default header
     }
