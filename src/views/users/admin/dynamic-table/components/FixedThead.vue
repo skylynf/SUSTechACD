@@ -2,6 +2,10 @@
   <div class="app-container">
     <div class="filter-container">
 <!--      'name', 'id', 'reputation','link','profile image','participation'-->
+      <div style="margin:0 0 5px 20px">
+        <input type="text"  ref="queryexpenseID">
+        <el-button @click="changeChart()">查询</el-button>
+      </div>
       <el-checkbox-group v-model="checkboxVal">
         <el-checkbox label="expenseID">
           expenseID
@@ -40,12 +44,12 @@
           {{ scope.row[fruit] }}
         </template>
       </el-table-column>
-      <el-table-column label="操作">
-        <template slot-scope="scope">
-          <!-- 这里可以添加您自定义的按钮内容和行为 -->
-          <el-button type="primary" size="small" @click="handleButtonClick(scope.row)">Go to his/her profile</el-button>
-        </template>
-      </el-table-column>
+<!--      <el-table-column label="操作">-->
+<!--        <template slot-scope="scope">-->
+<!--          &lt;!&ndash; 这里可以添加您自定义的按钮内容和行为 &ndash;&gt;-->
+<!--          <el-button type="primary" size="small" @click="handleButtonClick(scope.row)">Go to his/her profile</el-button>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
     </el-table>
   </div>
 </template>
@@ -66,8 +70,10 @@ export default {
     handleButtonClick(row){
       window.open(row.link, "_blank");
     },
-    initChart(){
-      axios.get('http://localhost:9090//api/expenses/{expenseID}')
+    changeChart(){
+      var ID=this.$refs.queryexpenseID.value;
+      var url='http://localhost:9090//api/expenses/{'+ID+'}';
+      axios.get(url)
       .then(response => {
         this.chart = echarts.init(document.getElementById('chart-container'))
         for (let i = 0; i < 1; i++) {
@@ -83,17 +89,6 @@ export default {
               remark: response.data[i].info.remark,
               applicationState: response.data[i].info.applicationState,
           }
-          // "expenseID": 1827328,
-          //   "expenseName": "办公用品采购",
-          //   "fundID": 9374829,
-          //   "amount": 50,
-          //   "operator": "沈昀",
-          //   "category1": "会议费",
-          //   "category2": "学术会议费",
-          //   "abstract": "购买会议必需品",
-          //   "remark": "请尽快审批",
-          //   "applicationState": 1
-          // eslint-disable-next-line
           this.tableData.push(tuple);
         }
         console.log(this.tableData)
@@ -117,7 +112,7 @@ export default {
         // }
       ],
       key: 1, // table key
-      formTheadOptions: ['经费编号','经费名称','课题组','经办人',	'支出类别一级',	'支出类别二级',	'内容摘要',	'支出金额（元）'],
+      formTheadOptions: ['expenseID','fundID','amount','operator',	'category1',	'category2',	'abstract',	'remark','applicationState'],
       checkboxVal: defaultFormThead, // checkboxVal
       formThead: defaultFormThead // 默认表头 Default header
     }
