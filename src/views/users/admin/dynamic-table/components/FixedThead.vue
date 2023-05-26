@@ -3,30 +3,34 @@
     <div class="filter-container">
 <!--      'name', 'id', 'reputation','link','profile image','participation'-->
       <el-checkbox-group v-model="checkboxVal">
-        <el-checkbox label="经费编号">
-          经费编号
+        <el-checkbox label="expenseID">
+          expenseID
         </el-checkbox>
-        <el-checkbox label="经费名称">
-          经费名称
+        <el-checkbox label="fundID">
+          fundID
         </el-checkbox>
-        <el-checkbox label="课题组">
-          课题组
+        <el-checkbox label="amount">
+          amount
         </el-checkbox>
-        <el-checkbox label="经办人">
-          经办人
+        <el-checkbox label="operator">
+          operator
         </el-checkbox>
-        <el-checkbox label="支出类别一级">
-          支出类别一级
+        <el-checkbox label="category1">
+          category1
         </el-checkbox>
-        <el-checkbox label="支出类别二级">
-          支出类别二级
+        <el-checkbox label="category2">
+          category2
         </el-checkbox>
-        <el-checkbox label="内容摘要">
-          内容摘要
+        <el-checkbox label="abstract">
+          abstract
         </el-checkbox>
-        <el-checkbox label="支出金额（元）">
-          支出金额（元）
+        <el-checkbox label="remark">
+          remark
         </el-checkbox>
+        <el-checkbox label="applicationState">
+          applicationState
+        </el-checkbox>
+
       </el-checkbox-group>
     </div>
 <!--经费编号	经费名称	课题组	经办人	支出类别一级	支出类别二级	内容摘要	支出金额（元）-->
@@ -50,7 +54,7 @@
 import axios from 'axios'
 import echarts from 'echarts'
 
-const defaultFormThead = ['经费编号','经费名称','课题组','经办人',	'支出类别一级',	'支出类别二级',	'内容摘要',	'支出金额（元）']
+const defaultFormThead = ['expenseID','fundID','amount','operator',	'category1',	'category2',	'abstract',	'remark','applicationState']
 
 export default {
   mounted() {
@@ -63,18 +67,32 @@ export default {
       window.open(row.link, "_blank");
     },
     initChart(){
-      axios.get('http://localhost:9090/alldata')
+      axios.get('http://localhost:9090//api/expenses/{expenseID}')
       .then(response => {
         this.chart = echarts.init(document.getElementById('chart-container'))
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < 1; i++) {
           var tuple = {
-            name: response.data[i].info.display_name,
-            id:response.data[i].info.user_id,
-            reputation:response.data[i].info.reputation,
-            link:response.data[i].info.link,
-            image:response.data[i].info.profile_image,
-            participation: response.data[i].count,
+              expenseID: response.data[i].info.expenseID,
+              expenseName: response.data[i].info.expenseName,
+              fundID: response.data[i].info.fundID,
+              amount: response.data[i].info.amount,
+              operator: response.data[i].info.operator,
+              category1: response.data[i].info.category1,
+              category2: response.data[i].info.category2,
+              abstract: response.data[i].info.abstract,
+              remark: response.data[i].info.remark,
+              applicationState: response.data[i].info.applicationState,
           }
+          // "expenseID": 1827328,
+          //   "expenseName": "办公用品采购",
+          //   "fundID": 9374829,
+          //   "amount": 50,
+          //   "operator": "沈昀",
+          //   "category1": "会议费",
+          //   "category2": "学术会议费",
+          //   "abstract": "购买会议必需品",
+          //   "remark": "请尽快审批",
+          //   "applicationState": 1
           // eslint-disable-next-line
           this.tableData.push(tuple);
         }
