@@ -27,6 +27,11 @@ def get_expense_by_id(expenseID):
     #         return jsonify({'error': 'Invalid JSON'}), 400
 
 
+
+
+
+# 增加支出
+
 @app.route('/api/expenses/add', methods=['POST'])
 @cross_origin()
 def add_expense():
@@ -61,6 +66,7 @@ def add_expense():
     # 返回新增的支出信息
     return jsonify(new_expense), 201
 
+#删除支出
 @app.route('/api/expenses/delete/<int:expenseID>', methods=['DELETE'])
 @cross_origin()
 def delete_expense(expenseID):
@@ -76,6 +82,7 @@ def delete_expense(expenseID):
         print("delete failed")
         return jsonify({'error': f'Expense with expenseID {expenseID} not found.'}), 404
 
+#送审支出
 @app.route('/api/expenses/submit/<int:expenseID>', methods=['POST'])
 @cross_origin()
 def submit_expense(expenseID):
@@ -85,6 +92,7 @@ def submit_expense(expenseID):
   # 返回成功更新的响应
   return jsonify({'message': 'Expense submit successfully'}), 200
 
+#修改支出
 @app.route('/api/expenses/modify/<int:expenseID>', methods=['PUT'])
 @cross_origin()
 def modify_expense(expenseID):
@@ -118,6 +126,7 @@ def modify_expense(expenseID):
     expense.to_csv('expense.csv', index=False)
     return jsonify(new_expense), 200
 
+#添加用户
 @app.route('/api/user/add', methods=['POST'])
 @cross_origin()
 def add_user():
@@ -138,6 +147,7 @@ def add_user():
     # 返回新增的支出信息
     return jsonify(new_user), 201
 
+#修改用户
 @app.route('/api/user/modify/<int:userID>', methods=['PUT'])
 @cross_origin()
 def modify_user(userID):
@@ -158,6 +168,7 @@ def modify_user(userID):
     # 返回新增的支出信息
     return jsonify(new_user), 201
 
+#删除用户
 @app.route('/api/user/delete/<int:userID>', methods=['DELETE'])
 @cross_origin()
 def delete_user(userID):
