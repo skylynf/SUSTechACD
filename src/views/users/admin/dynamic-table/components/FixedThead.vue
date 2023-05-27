@@ -10,6 +10,9 @@
         <el-checkbox label="expenseID">
           expenseID
         </el-checkbox>
+        <el-checkbox label="expenseName">
+          expenseName
+        </el-checkbox>
         <el-checkbox label="fundID">
           fundID
         </el-checkbox>
@@ -59,7 +62,7 @@
   // import echarts from 'echarts'
   import * as echarts from 'echarts'
 
-  const defaultFormThead = ['expenseID','fundID','amount','operator',	'category1',	'category2',	'abstract',	'remark','applicationState']
+  const defaultFormThead = ['expenseID','expenseName','fundID','amount','operator',	'category1',	'category2',	'abstract',	'remark','applicationState']
 
   // document.getElementById("button1").addEventListener("click", changeChart);
   export default {
@@ -73,57 +76,39 @@
           console.log(this.tableData)
       },
       changeChart(){
-        // var ID=this.$refs.queryexpenseID.value;
-        var url='http://127.0.0.1:5000/api/expenses/1827328';
+        var ID=this.$refs.queryexpenseID.value;
+        // var ID='1827328'
+        var url='http://127.0.0.1:5000/api/expenses/'+ID;
         console.log("12345678")
         axios.get(url);
         console.log("wwwwww111")
         axios.get(url).then(response => {
            // this.chart = echarts.init(document.getElementById('www'))
-          console.log("wwwwww")
+
+          var result = JSON.parse(response.data);
+          console.log(result)
           var tuple = {
-            // expenseID: response.data.info.expenseID[0],
-            // expenseName: response.data.info.expenseName[0],
-            // fundID: response.data.info.fundID[0],
-            // amount: response.data.info.amount[0],
-            // operator: response.data.info.operator[0],
-            // category1: response.data.info.category1[0],
-            // category2: response.data[0].info,
-            // abstract: response.data.info,
-            // remark: response.data[0],
-            // applicationState: response.data,
-            expenseID: "r22222ID[0]",
-            expenseName: "222232332me[0]",
-            fundID:"www",
-            amount: "www",
-            operator: "www",
-            category1: "www",
-            category2: "www",
-            abstract: "www",
-            remark: "www",
-            applicationState: "www"
+            expenseID: result.expenseID,
+            expenseName: result.expenseName,
+            fundID: result.fundID,
+            amount: result.amount,
+            operator: result.operator,
+            category1: result.category1,
+            category2: result.category2,
+            abstract: result.abstract,
+            remark: result.remark,
+            applicationState: result.applicationState,
+
           }
           this.tableData.push(tuple);
 
-          console.log("87654321")
+          console.log(this.tableData)
         })
       }
     },
     data() {
       return {
         tableData: [
-          {
-            expenseID: "response.data.info.expenseID[0]",
-            expenseName: "response.data.info.expenseName[0]",
-            fundID:"www",
-            amount: "www",
-            operator: "www",
-            category1: "www",
-            category2: "www",
-            abstract: "www",
-            remark: "www",
-            applicationState: "www",
-          }
           // {
           //   name: 'fruit-1',
           //   apple: 'apple-10',
@@ -138,7 +123,7 @@
           // }
         ],
         key: 1, // table key
-        formTheadOptions: ['expenseID','fundID','amount','operator',	'category1',	'category2',	'abstract',	'remark','applicationState'],
+        formTheadOptions: ['expenseID','expenseName','fundID','amount','operator',	'category1',	'category2',	'abstract',	'remark','applicationState'],
         checkboxVal: defaultFormThead, // checkboxVal
         formThead: defaultFormThead // 默认表头 Default header
       }
