@@ -4,12 +4,8 @@ import pandas as pd
 
 app = Flask(__name__)
 CORS(app)
-try:
-  expense = pd.read_csv('expense.csv')
-  users = pd.read_csv('user.csv')
-except Exception as e:
-  expense = pd.read_json('expense.json')
-  users = pd.read_json('expense.json')
+expense = pd.read_csv('expense.csv')
+users = pd.read_csv('user.csv')
 
 @app.route('/api/expenses/<int:expenseID>', methods=['GET', 'POST'])
 @cross_origin()
@@ -61,10 +57,6 @@ def add_expense():
     # 将新支出信息添加到列表中
     expense.loc[len(expense)] = new_expense
     expense.to_csv('expense.csv', index=False)
-    json_data_expense = expense.to_json(orient='records')
-    with open('expense.json', 'w') as file:
-      file.write(json_data_expense)
-    print(new_expense)
 
     # 返回新增的支出信息
     return jsonify(new_expense), 201
@@ -79,10 +71,6 @@ def delete_expense(expenseID):
         expense.drop(expense[expense['expenseID'] == expenseID].index, inplace=True)
         expense.reset_index(drop=True, inplace=True)
         expense.to_csv('expense.csv', index=False)
-        json_data_expense = expense.to_json(orient='records')
-        with open('expense.json', 'w') as file:
-          file.write(json_data_expense)
-        print("delete successfully")
         return jsonify({'message': f'Expense with expenseID {expenseID} deleted successfully.'}), 200
     else:
         print("delete failed")
@@ -93,9 +81,6 @@ def delete_expense(expenseID):
 def submit_expense(expenseID):
   expense.loc[expense['expenseID'] == expenseID, 'applicationState'] = 1
   expense.to_csv('expense.csv', index=False)
-  json_data_expense = expense.to_json(orient='records')
-  with open('expense.json', 'w') as file:
-    file.write(json_data_expense)
   print("expense submit successfully")
   # 返回成功更新的响应
   return jsonify({'message': 'Expense submit successfully'}), 200
@@ -131,11 +116,6 @@ def modify_expense(expenseID):
     index_to_update = expense[expense['expenseID'] == expenseID].index
     expense.loc[index_to_update] = new_expense
     expense.to_csv('expense.csv', index=False)
-    json_data_expense = expense.to_json(orient='records')
-    with open('expense.json', 'w') as file:
-      file.write(json_data_expense)
-    print(new_expense)
-    # 返回新增的支出信息
     return jsonify(new_expense), 200
 
 @app.route('/api/user/add', methods=['POST'])
@@ -154,11 +134,7 @@ def add_user():
     # 将新支出信息添加到列表中
     users.loc[len(users)] = new_user
     users.to_csv('user.csv', index=False)
-    json_data_user = users.to_json(orient='records')
-    with open('user.json', 'w') as file:
-      file.write(json_data_user)
     print(new_user)
-
     # 返回新增的支出信息
     return jsonify(new_user), 201
 
@@ -178,9 +154,6 @@ def modify_user(userID):
     index_to_update = users[users['userID'] == userID].index
     users.loc[index_to_update] = new_user
     users.to_csv('user.csv', index=False)
-    json_data_user = users.to_json(orient='records')
-    with open('user.json', 'w') as file:
-      file.write(json_data_user)
     print(new_user)
     # 返回新增的支出信息
     return jsonify(new_user), 201
@@ -195,9 +168,6 @@ def delete_user(userID):
         users.drop(users[users['userID'] == userID].index, inplace=True)
         users.reset_index(drop=True, inplace=True)
         users.to_csv('user.csv', index=False)
-        json_data_user = users.to_json(orient='records')
-        with open('user.json', 'w') as file:
-          file.write(json_data_user)
         print("delete successfully")
         return jsonify({'message': f'User with userID {userID} deleted successfully.'}), 200
     else:
