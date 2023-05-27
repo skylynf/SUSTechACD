@@ -64,9 +64,9 @@
   // document.getElementById("button1").addEventListener("click", changeChart);
   export default {
     mounted() {
-      this.$nextTick(() => {
-        this.initChart()
-      })
+      // this.$nextTick(() => {
+      //   this.initChart()
+      // })
     },
     methods:{
       initChart(){
@@ -76,9 +76,10 @@
         // var ID=this.$refs.queryexpenseID.value;
         var url='http://127.0.0.1:5000/api/expenses/1827328';
         console.log("12345678")
-        axios.get(url)
-        .then(response => {
-          // this.chart = echarts.init(document.getElementById('www'))
+        axios.get(url);
+        console.log("wwwwww111")
+        axios.get(url).then(response => {
+           // this.chart = echarts.init(document.getElementById('www'))
           console.log("wwwwww")
           var tuple = {
             // expenseID: response.data.info.expenseID[0],
