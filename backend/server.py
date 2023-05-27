@@ -5,7 +5,7 @@ import pandas as pd
 app = Flask(__name__)
 CORS(app)
 expense = pd.read_csv('expense.csv')
-
+users = pd.read_csv('user.csv')
 
 @app.route('/api/expenses/<int:expenseID>', methods=['GET', 'POST'])
 @cross_origin()
@@ -116,6 +116,63 @@ def modify_expense(expenseID):
     print(new_expense)
     # 返回新增的支出信息
     return jsonify(new_expense), 200
+
+@app.route('/api/user/add', methods=['POST'])
+@cross_origin()
+def add_user():
+    # 获取请求中的参数
+    userID = request.json.get('userID')
+    userName = request.json.get('userName')
+    privilege = request.json.get('privilege')
+    # 创建新支出信息
+    new_user = {
+        'userID': userID,
+        'userName': userName,
+        'privilege': privilege,
+    }
+    # 将新支出信息添加到列表中
+    users.loc[len(users)] = new_user
+    users.to_csv('user.csv', index=False)
+    print(new_user)
+
+    # 返回新增的支出信息
+    return jsonify(new_user), 201
+
+@app.route('/api/user/modify/<int:userID>', methods=['PUT'])
+@cross_origin()
+def modify_user(userID):
+    # 获取请求中的参数
+    userName = request.json.get('userName')
+    privilege = request.json.get('privilege')
+    # 创建新支出信息
+    new_user = {
+        'userID': userID,
+        'userName': userName,
+        'privilege': privilege,
+    }
+    # 将新支出信息添加到列表中
+    index_to_update = users[users['userID'] == userID].index
+    users.loc[index_to_update] = new_user
+    users.to_csv('user.csv', index=False)
+    print(new_user)
+    # 返回新增的支出信息
+    return jsonify(new_user), 201
+
+@app.route('/api/user/delete/<int:userID>', methods=['DELETE'])
+@cross_origin()
+def delete_user(userID):
+    # 检查 DataFrame 中是否存在对应的 expenseID
+    print("hi")
+    if userID in users['userID'].values:
+        # 根据 expenseID 删除对应的数据行
+        users.drop(users[users['userID'] == userID].index, inplace=True)
+        users.reset_index(drop=True, inplace=True)
+        users.to_csv('user.csv', index=False)
+        print("delete successfully")
+        return jsonify({'message': f'User with userID {userID} deleted successfully.'}), 200
+    else:
+        print("delete failed")
+        return jsonify({'error': f'User with userID {userID} not found.'}), 404
 
 if __name__ == '__main__':
     app.run(debug=True)
