@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<script>
+
+const expenseID = 1827329; // 要删除的 expenseID
+const url = `http://localhost:5000/api/expenses/submit/${expenseID}`;
+
+const xhr = new XMLHttpRequest();
+xhr.open('POST', url);
+xhr.onreadystatechange = function() {
+  if (xhr.readyState === XMLHttpRequest.DONE) {
+    if (xhr.status === 200) {
+      console.log('Expense deleted successfully.');
+      // 执行其他操作或更新界面
+    } else {
+      console.error('Failed to delete expense.');
+    }
+  }
+};
+xhr.send();
+
+</script>
+
+</body>
+</html>
