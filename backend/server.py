@@ -15,7 +15,12 @@ except Exception as e:
 @cross_origin()
 def get_expense_by_id(expenseID):
     if request.method == 'GET':
-        return jsonify(expense.loc[expense['expenseID'] == expenseID].to_json())
+        select = expense.loc[expense['expenseID'] == expenseID]
+        if len(select):
+          return jsonify(select.to_json()), 200
+        else:
+          return jsonify({'error': f'Expense with expenseID {expenseID} not found.'}), 404
+
     # elif request.method == 'POST':
     #     # 处理 POST 请求
     #     json_data = request.get_json()
