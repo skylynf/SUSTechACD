@@ -224,10 +224,12 @@ def modify_expense(expenseID):
           'applicationState': applicationState
       }
       # 将新支出信息添加到列表中
+      filtered_df = expense[expense['expenseID'] == expenseID]
+      old_amount = filtered_df['amount'].values[0]
       filtered_df = fund[fund['fundID'] == fundID]
       totalQuota = filtered_df['totalQuota'].values[0]
       usedQuota = filtered_df['usedQuota'].values[0]
-      if float(usedQuota) + amount > totalQuota:
+      if float(usedQuota) + amount - float(old_amount) > totalQuota:
         return jsonify({'error': f'expense exceed total quota.'}), 404
       usedQuota = usedQuota + amount
       mask = fund['fundID'] == fundID
