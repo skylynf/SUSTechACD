@@ -1,8 +1,103 @@
 <template>
-  <div :class="className" :style="{height:height,width:width}" />
+  <el-form ref="form" :model="form" label-width="80px">
+    <div style="margin: 20px;">增加支出</div>
+    <el-form-item label="支出编号">
+      <el-input v-model="form.expenseID"></el-input>
+    </el-form-item>
+    <el-form-item label="支出名称">
+      <el-input v-model="form.expenseName"></el-input>
+    </el-form-item>
+    <el-form-item label="该支出对应的经费号">
+      <el-input v-model="form.fundID"></el-input>
+    </el-form-item>
+    <el-form-item label="支出额度">
+      <el-input v-model="form.amount"></el-input>
+    </el-form-item>
+    <el-form-item label="经办人">
+      <el-input v-model="form.operator"></el-input>
+    </el-form-item>
+    <el-form-item label="支出类别一级">
+      <el-input v-model="form.category1"></el-input>
+    </el-form-item>
+    <el-form-item label="支出类别二级">
+      <el-input v-model="form.category2"></el-input>
+    </el-form-item>
+    <el-form-item label="内容摘要">
+      <el-input v-model="form.abstract"></el-input>
+    </el-form-item>
+    <el-form-item label="备注">
+      <el-input v-model="form.remark"></el-input>
+    </el-form-item>
+    <el-form-item label="申请状态">
+      <el-input v-model="form.applicationState"></el-input>
+    </el-form-item>
+    <el-form-item>
+      <el-button type="primary" @click="onSubmit">立即创建</el-button>
+    </el-form-item>
+  </el-form>
 </template>
 
+
 <script>
+  import axios from 'axios'
+
+  const url = 'http://127.0.0.1:5000/api/expenses/add';
+
+  const data = {
+    expenseID: 1827328,
+    expenseName: '办公用品采购',
+    fundID: 9374829,
+    amount: 50,
+    operator: '沈昀',
+    category1: '会议费',
+    category2: '学术会议费',
+    abstract: '购买会议必需品',
+    remark: '请尽快审批',
+    applicationState: 1
+  };
+
+  export default {
+    data() {
+      return {
+        form: {
+          expenseID: '',
+          expenseName: '',
+          fundID: '',
+          amount: '',
+          operator: '',
+          category1: '',
+          category2: '',
+          abstract: '',
+          remark: '',
+          applicationState: ''
+        }
+      }
+    },
+    methods: {
+      onSubmit() {
+        console.log('submit!');
+        axios.post(url, data)
+        .then(response => (this.info = response))
+        .catch(function (error) { // 请求失败处理
+            console.log(error);
+          });
+        }
+    }
+  }
+</script>
+
+
+
+
+
+
+
+
+<!-- <template>
+  <div :class="className" :style="{height:height,width:width}" />
+</template> -->
+
+<!-- <script>
 import echarts from 'echarts'
 require('echarts/theme/macarons') // echarts theme
 import resize from './mixins/resize'
@@ -113,4 +208,4 @@ export default {
     }
   }
 }
-</script>
+</script> -->
