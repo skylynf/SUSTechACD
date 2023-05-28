@@ -8,10 +8,11 @@ app = Flask(__name__)
 CORS(app)
 expense = pd.read_csv('expense.csv')
 users = pd.read_csv('user.csv')
+users['userID'] = users['userID'].astype(str)
 fund = pd.read_csv('fund.csv')
 filtered_df = fund[fund['fundID'] == 5433912]
 totalQuota = filtered_df['totalQuota'].values[0]
-
+currentUser = 'hh'
 # API 1. 获取课题组全部经费完成情况（支出情况）：
 @app.route('/api/groups/<int:userID>/funds', methods=['GET'])  # 此处的userID，即为杨在文档中写的groupID，董认为userID和groupID是同一个东西
 @cross_origin()
@@ -192,6 +193,9 @@ def submit_expense(expenseID):
   else:
     return jsonify({'error': f'Expense with expenseID {expenseID} not found.'}), 404
 
+
+
+
 #修改支出
 @app.route('/api/expenses/modify/<int:expenseID>', methods=['PUT'])
 @cross_origin()
@@ -306,5 +310,50 @@ def delete_user(userID):
         print("delete failed")
         return jsonify({'error': f'User with userID {userID} not found.'}), 404
 
+
+
+def export_user_fund():
+  global fund
+  remainQuota = fund['totalQuota'] - fund['usedQuota']
+  executeRate = fund['usedQuota'] / fund['totalQuota']
+  fund['remainQuota'] = remainQuota
+  fund['executeRate'] = executeRate
+  fund = fund.drop('remark', axis=1)
+  fund = fund.drop('abstract', axis=1)
+  fund.rename(columns={'fundID': '经费编号', 'fundName': '经费名称', 'userID': '课题组', 'totalQuota': '可使用经费总额'
+    , 'usedQuota': '已使用经费', 'remainQuota': '经费余额', 'executeRate': '执行率'}, inplace=True)
+  fund.to_csv('经费使用汇总表.csv')
+  fund = pd.read_csv('fund.csv')
+
+
+
+@app.route('/api/users/login', methods=['GET'])
+@cross_origin()
+def examineUser():
+  userID = request.args.get('username')
+  passwd = int(request.args.get('passwd'))
+  # 检查 DataFrame 中是否存在对应的 expenseID
+  if userID in users['userID'].values:
+      if passwd == users.loc[users['userID'] == userID, 'password'].values[0]:
+        currentUser = userID
+        return jsonify(1), 200
+
+@app.route('/api/users/<int:expenseID>/accept', methods=['POST'])
+@cross_origin()
+def accept_pending(expenseID):
+  if expenseID in expense['expenseID'].values():
+    expense.loc[expense['expenseID'] == expenseID, 'applicationState'] = 3
+    return jsonify('accept successfully'), 200
+
+  return jsonify({'error': f'Wrong user name or password'}), 404
+
+@app.route('/api/users/<int:expenseID>/reject', methods=['POST'])
+@cross_origin()
+def accept_pending(expenseID):
+  if expenseID in expense['expenseID'].values():
+    expense.loc[expense['expenseID'] == expenseID, 'applicationState'] = 2
+    return jsonify('reject successfully'), 200
+
+  return jsonify({'error': f'Wrong user name or password'}), 404
 if __name__ == '__main__':
     app.run(debug=True)

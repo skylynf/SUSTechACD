@@ -6,19 +6,18 @@
 </head>
 <body>
 <script>
-
-const expenseID = 1827329; // 要删除的 expenseID
-const url = `http://localhost:5000/api/expenses/submit/${expenseID}`;
-
-const xhr = new XMLHttpRequest();
-xhr.open('POST', url);
+  const username = '1';
+  const password = '123';
+  const xhr = new XMLHttpRequest();
+xhr.open('GET', `http://localhost:5000/api/users/login?username=${username}&passwd=${password}`);
 xhr.onreadystatechange = function() {
   if (xhr.readyState === XMLHttpRequest.DONE) {
     if (xhr.status === 200) {
-      console.log('Expense deleted successfully.');
-      // 执行其他操作或更新界面
+      // 处理成功响应的数据
+      console.log(xhr.responseText);
     } else {
-      console.error('Failed to delete expense.');
+      // 处理请求错误
+      console.error('Error:', xhr.status);
     }
   }
 };
