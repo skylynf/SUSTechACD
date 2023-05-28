@@ -67,24 +67,35 @@ def get_pending_expense():
 @app.route('/api/funds/add', methods=['POST'])
 @cross_origin()
 def add_fund():
+      fundID = int(request.json.get('fundID'))
       fundName = request.json.get('fundName')  # request.form.get
-      userID = request.json.get('userID')
+      userID = int(request.json.get('userID'))
       totalQuota = request.json.get('totalQuota')
-
-      if fundName and userID and totalQuota:
-          new_fund = {
-            'fundID': int(fund.loc[len(fund) - 1]['fundID'] + 1),
-            # 杨写的API，没有给fundID，董认为必须有fundID，否则后面无法删除
-            # 暂时将fundID设为：此前最后一条fund的fundID + 1
-            'fundName': fundName,
-            'userID': userID,
-            'totalQuota': totalQuota,
-          }
-          fund.loc[len(fund)] = new_fund
-          fund.to_csv('fund.csv', index=False)
-          return jsonify(new_fund), 201    # 返回值包含新生成的fundID
-      else:
-          return jsonify({'error': 'Invalid request params'}), 400
+      usedQuota = request.json.get('usedQuota')
+      abstract = request.json.get('usedQuota')
+      remark = request.json.get('usedQuota')
+      
+      new_fund = {
+          'fundID': fundID,
+          'fundName': fundName,
+          'userID': userID,
+          'totalQuota': totalQuota,
+          'usedQuota': usedQuota,
+          'abstract': abstract,
+          'remark': remark,
+      }
+      
+      print(fundID)
+      print(fund['fundID'].values)
+      
+      if fundID in fund['fundID'].values:
+          print('error success')
+          return jsonify({'error': f'Duplicated fundID {fundID}.'}), 404
+        
+      fund.loc[len(fund)] = new_fund
+      fund.to_csv('fund.csv', index=False)
+      
+      return jsonify(new_fund), 201
 
 
 # API 3. 删除一个经费：
