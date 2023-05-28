@@ -9,7 +9,7 @@
   const username = '1';
   const password = '123';
   const xhr = new XMLHttpRequest();
-xhr.open('GET', `http://localhost:5000/api/users/login?username=${username}&passwd=${password}`);
+xhr.open('GET', `http://localhost:5000/api/expenses/findAll`);
 xhr.onreadystatechange = function() {
   if (xhr.readyState === XMLHttpRequest.DONE) {
     if (xhr.status === 200) {

@@ -10,9 +10,14 @@ expense = pd.read_csv('expense.csv')
 users = pd.read_csv('user.csv')
 users['userID'] = users['userID'].astype(str)
 fund = pd.read_csv('fund.csv')
+fund['userID'] = fund['userID'].astype(str)
 filtered_df = fund[fund['fundID'] == 5433912]
 totalQuota = filtered_df['totalQuota'].values[0]
-currentUser = 'hh'
+result = fund[fund['userID'] == 1]['fundID'].tolist()
+result = expense[expense['fundID'].isin(result)]
+print(result)
+
+currentUser = '1'
 # API 1. 获取课题组全部经费完成情况（支出情况）：
 @app.route('/api/groups/<int:userID>/funds', methods=['GET'])  # 此处的userID，即为杨在文档中写的groupID，董认为userID和groupID是同一个东西
 @cross_origin()
@@ -330,13 +335,14 @@ def export_user_fund():
 @app.route('/api/users/login', methods=['GET'])
 @cross_origin()
 def examineUser():
+  global currentUser
   userID = request.args.get('username')
   passwd = int(request.args.get('passwd'))
-  # 检查 DataFrame 中是否存在对应的 expenseID
   if userID in users['userID'].values:
       if passwd == users.loc[users['userID'] == userID, 'password'].values[0]:
         currentUser = userID
         return jsonify(1), 200
+  return jsonify(0), 200
 
 @app.route('/api/users/<int:expenseID>/accept', methods=['POST'])
 @cross_origin()
@@ -345,15 +351,21 @@ def accept_pending(expenseID):
     expense.loc[expense['expenseID'] == expenseID, 'applicationState'] = 3
     return jsonify('accept successfully'), 200
 
-  return jsonify({'error': f'Wrong user name or password'}), 404
+  return jsonify({'error': f'Unknown expenseID'}), 404
 
 @app.route('/api/users/<int:expenseID>/reject', methods=['POST'])
 @cross_origin()
-def accept_pending(expenseID):
+def reject_pending(expenseID):
   if expenseID in expense['expenseID'].values():
     expense.loc[expense['expenseID'] == expenseID, 'applicationState'] = 2
     return jsonify('reject successfully'), 200
 
-  return jsonify({'error': f'Wrong user name or password'}), 404
+@app.route('/api/expenses/findAll', methods=['GET'])
+@cross_origin()
+def find_all_expenses():
+  result = fund[fund['userID'] == currentUser]['fundID'].tolist()
+  result = expense[expense['fundID'].isin(result)]
+  print(result.to_json(orient='records'))
+  return result.to_json(orient='records'), 200
 if __name__ == '__main__':
     app.run(debug=True)
