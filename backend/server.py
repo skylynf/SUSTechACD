@@ -74,7 +74,7 @@ def add_fund():
       usedQuota = request.json.get('usedQuota')
       abstract = request.json.get('usedQuota')
       remark = request.json.get('usedQuota')
-      
+
       new_fund = {
           'fundID': fundID,
           'fundName': fundName,
@@ -84,17 +84,17 @@ def add_fund():
           'abstract': abstract,
           'remark': remark,
       }
-      
+
       print(fundID)
       print(fund['fundID'].values)
-      
+
       if fundID in fund['fundID'].values:
           print('error success')
           return jsonify({'error': f'Duplicated fundID {fundID}.'}), 404
-        
+
       fund.loc[len(fund)] = new_fund
       fund.to_csv('fund.csv', index=False)
-      
+
       return jsonify(new_fund), 201
 
 
@@ -118,6 +118,9 @@ def delete_fund(fundID):
 def add_expense():
     # 获取请求中的参数
     expenseID = int(request.json.get('expenseID'))
+    if expenseID in expense['expenseID'].values:
+      print('error success')
+      return jsonify({'error': f'Duplicated expenseID {expenseID}.'}), 404
     expenseName = request.json.get('expenseName')
     fundID = request.json.get('fundID')
     amount = request.json.get('amount')
@@ -140,14 +143,18 @@ def add_expense():
         'remark': remark,
         'applicationState': applicationState
     }
-    print(expenseID)
+    filtered_df = fund[fund['fundID'] == fundID]
+    # 获取 totalQuota 和 usedQuota 列的值
+    totalQuota = filtered_df['totalQuota'].values[0]
+    usedQuota = filtered_df['usedQuota'].values[0]
+    if usedQuota + amount > totalQuota:
+      return jsonify({'error': f'expense exceed total quota.'}), 404
+    usedQuota = usedQuota + amount
+    mask = fund['fundID'] == fundID
+    fund.loc[mask, 'usedQuota'] = usedQuota
     print(expense['expenseID'].values)
-    if expenseID in expense['expenseID'].values:
-      print('error success')
-      return jsonify({'error': f'Duplicated expenseID {expenseID}.'}), 404
     expense.loc[len(expense)] = new_expense
     expense.to_csv('expense.csv', index=False)
-
     # 返回新增的支出信息
     return jsonify(new_expense), 201
 
