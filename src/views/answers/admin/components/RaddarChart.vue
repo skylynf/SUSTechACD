@@ -43,19 +43,6 @@
 
   const url = 'http://127.0.0.1:5000/api/expenses/add';
 
-  const data = {
-    expenseID: 12,
-    expenseName: '办公用品采购',
-    fundID: 9374829,
-    amount: 50,
-    operator: '沈昀',
-    category1: '会议费',
-    category2: '学术会议费',
-    abstract: '购买会议必需品',
-    remark: '请尽快审批',
-    applicationState: 1
-  };
-
   export default {
     data() {
       return {
