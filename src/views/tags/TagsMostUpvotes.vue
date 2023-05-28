@@ -1,239 +1,145 @@
 <template>
-  <div>
-  <div class="container">
-     <div id="chart-container" />
-      <div id="pie-container" />
-
-  </div>
-    <div style="margin:0 0 5px 20px">
-      Single tags among top 20
-    </div>
   <div class="app-container">
-    <el-table :key="key" :data="tableData" border fit highlight-current-row style="width: 100%">
+    <div class="filter-container">
+      <div style="margin:0 0 5px 20px">
+        <el-button type=“button” @click="changeChart">查询</el-button>
+      </div>
+      <el-checkbox-group v-model="checkboxVal">
+        <el-checkbox label="expenseID">
+          expenseID
+        </el-checkbox>
+        <el-checkbox label="expenseName">
+          expenseName
+        </el-checkbox>
+        <el-checkbox label="fundID">
+          fundID
+        </el-checkbox>
+        <el-checkbox label="amount">
+          amount
+        </el-checkbox>
+        <el-checkbox label="operator">
+          operator
+        </el-checkbox>
+        <el-checkbox label="category1">
+          category1
+        </el-checkbox>
+        <el-checkbox label="category2">
+          category2
+        </el-checkbox>
+        <el-checkbox label="abstract">
+          abstract
+        </el-checkbox>
+        <el-checkbox label="remark">
+          remark
+        </el-checkbox>
+        <el-checkbox label="applicationState">
+          applicationState
+        </el-checkbox>
+
+      </el-checkbox-group>
+    </div>
+    <!--经费编号	经费名称	课题组	经办人	支出类别一级	支出类别二级	内容摘要	支出金额（元）-->
+    <el-table id="www" :key="key" :data="tableData" border fit highlight-current-row style="width: 100%">
       <el-table-column v-for="fruit in formThead" :key="fruit" :label="fruit">
         <template slot-scope="scope">
           {{ scope.row[fruit] }}
         </template>
       </el-table-column>
+      <!--      <el-table-column label="操作">-->
+      <!--        <template slot-scope="scope">-->
+      <!--          &lt;!&ndash; 这里可以添加您自定义的按钮内容和行为 &ndash;&gt;-->
+      <!--          <el-button type="primary" size="small" @click="handleButtonClick(scope.row)">Go to his/her profile</el-button>-->
+      <!--        </template>-->
+      <!--      </el-table-column>-->
     </el-table>
-  </div>
-    <div style="margin:0 0 5px 20px">
-      Combination tags among top 20
-    </div>
-    <div class="app-container">
-      <el-table :key="key2" :data="combination" border fit highlight-current-row style="width: 100%">
-        <el-table-column v-for="fruit in formThead2" :key="fruit" :label="fruit">
-          <template slot-scope="scope">
-            {{ scope.row[fruit] }}
-          </template>
-        </el-table-column>
-      </el-table>
-    </div>
   </div>
 </template>
 
 <script>
-import echarts from 'echarts'
-import 'echarts-wordcloud'
-import axios from 'axios'
-const defaultFormThead = ['tag', 'value']
-const defaultFormThead2 = ['tag1','tag2', 'value']
-export default {
-  name: 'TagsMostUpvotes',
-  data() {
-    return {
-      tableData: [
+  import axios from 'axios'
+  // import echarts from 'echarts'
+  import * as echarts from 'echarts'
 
-      ],
-      combination:[],
-      key: 1, // table key
-      key2:1,
-      checkboxVal: defaultFormThead, // checkboxVal
-      formThead: defaultFormThead, // 默认表头 Default header
-      formThead2:defaultFormThead2,
-      chart: null,
-      pieChart: null
-    }
-  },
-  mounted() {
-    this.initChart()
-  },
-  beforeDestroy() {
-    if (!this.chart) {
-      return
-    }
-    if (!this.pieChart) {
-      return
-    }
-    this.chart.dispose()
-    this.chart = null
-    this.pieChart.dispose()
-    this.pieChart = null
-  },
-  methods: {
-    initChart() {
-      axios.get('http://localhost:9090/MostUpvotedTags')
-        .then(response => {
-          var keywords = []
-          var piewords = []
-          this.chart = echarts.init(document.getElementById('chart-container'))
-          keywords = response.data
-          // this.tableData = keywords
-          for (let i = 0; i < 20; i++) {
-            // console.log(keywords[i].name.charAt(0)=='[')
-              if (keywords[i].name.charAt(0)=='[') {
-                var tuple1 = {
-                  tag1:keywords[i].name.slice(1, -1).split(',')[0],
-                  tag2:keywords[i].name.slice(1, -1).split(',')[1],
-                  value:keywords[i].value
-                }
-                // eslint-disable-next-line
-                this.combination.push(tuple1);
-              } else {
-                var tuple2 = {
-                  tag:keywords[i].name,
-                  value:keywords[i].value
-                }
-                // eslint-disable-next-line
-                this.tableData.push(tuple2);
-              }
+  const defaultFormThead = ['expenseID','expenseName','fundID','amount','operator',	'category1',	'category2',	'abstract',	'remark','applicationState']
 
+  // document.getElementById("button1").addEventListener("click", changeChart);
+  export default {
+    mounted() {
+      // this.$nextTick(() => {
+      //   this.initChart()
+      // })
+    },
+    methods:{
+      initChart(){
+        console.log(this.tableData)
+      },
+      changeChart(){
+        var url='http://127.0.0.1:5000/api/expenses/pending';
+        console.log("12345678")
+        axios.get(url);
+        console.log("wwwwww111")
+        this.tableData=[]
+        axios.get(url).then(response => {
+          // this.chart = echarts.init(document.getElementById('www'))
+
+          var result = JSON.parse(response.data);
+          console.log(result)
+          for(var i=0;i<100;i++){
+            var j=i.toString();
+            var tuple = {
+              expenseID: result.expenseID[j],
+              expenseName: result.expenseName[j],
+              fundID: result.fundID[j],
+              amount: result.amount[j],
+              operator: result.operator[j],
+              category1: result.category1[j],
+              category2: result.category2[j],
+              abstract: result.abstract[j],
+              remark: result.remark[j],
+              applicationState: result.applicationState[j],
+
+            }
+            console.log(tuple.expenseID)
+            if(tuple.expenseID!==undefined)
+              this.tableData.push(tuple);
           }
 
-          piewords = keywords
-          var option = {
-            title: {
-              text: 'Tags with the \n most upvotes WordCloud',
-              textStyle: {
-                fontStyle: 'oblique',
-                fontSize: 40,
-                color: '#201e65'
-              },
-              left: 'center',
-              top: '5%' // 调整标题的位置，这里设置为距离顶部的百分比
-            },
-            tooltip: {},
-            toolbox: {
-              show: true,
-              feature: {
-                mark: { show: true },
-                dataView: { show: true, readOnly: false },
-                restore: { show: true },
-                saveAsImage: { show: true }
-              }
-            },
-            series: [{
-              type: 'wordCloud',
-              shape: {
-                cloudGrow: 0.2
-              },
-              sizeRange: [10, 60],
-              rotationRange: [-30, 30],
-              gridSize: 2,
-              drawOutOfBound: false,
-              layoutAnimation: true,
-              keepAspect: true,
-              textStyle: {
-                fontWeight: 'bold',
-                color: function() {
-                  return 'rgb(' + [
-                    Math.round(Math.random() * 160),
-                    Math.round(Math.random() * 160),
-                    Math.round(Math.random() * 160)
-                  ].join(',') + ')'
-                }
-              },
-              emphasis: {
-                textStyle: {
-                  shadowBlur: 15,
-                  shadowColor: '#333'
-                }
-              },
-              data: keywords
-            }]
-          }
-          this.chart.setOption(option)
 
-          this.pieChart = echarts.init(document.getElementById('pie-container'))
-          var pieOption = {
-            title: {
-              text: 'Tags with the \n most upvotes Pie',
-              textStyle: {
-                fontStyle: 'oblique',
-                fontSize: 40,
-                color: '#201e65'
-              },
-              left: 'center',
-              top: '5%' // 调整标题的位置，这里设置为距离顶部的百分比
-            },
-            tooltip: {
-              trigger: 'item',
-              formatter: '{a} <br/>{b} : {c} ({d}%)'
-            },
-            legend: {
-              right: 'center',
-              top: 'bottom',
-              data: [
-                'rose1',
-                'rose2',
-                'rose3',
-                'rose4',
-                'rose5',
-                'rose6',
-                'rose7',
-                'rose8'
-              ]
-            },
-            toolbox: {
-              show: true,
-              feature: {
-                mark: { show: true },
-                dataView: { show: true, readOnly: false },
-                restore: { show: true },
-                saveAsImage: { show: true }
-              }
-            },
-            series: [
-              {
-                name: 'Tags with most upvotes',
-                type: 'pie',
-                radius: [100,180],
-                center: ['50%', '50%'],
-                roseType: 'radius',
-                itemStyle: {
-                  borderRadius: 10
-                },
-                emphasis: {
-                  label: {
-                    show: true
-                  }
-                },
-                data: piewords
-              }]
-          }
-          this.pieChart.setOption(pieOption)
+
+          console.log(this.tableData)
         })
-        .catch(errorMostUpvotedTags => {
-          console.log('ERROR in MostUpvotedTags')
-        })
+      }
+    },
+    data() {
+      return {
+        tableData: [
+          // {
+          //   name: 'fruit-1',
+          //   apple: 'apple-10',
+          //   banana: 'banana-10',
+          //   orange: 'orange-10'
+          // },
+          // {
+          //   name: 'fruit-2',
+          //   apple: 'apple-20',
+          //   banana: 'banana-20',
+          //   orange: 'orange-20'
+          // }
+        ],
+        key: 1, // table key
+        formTheadOptions: ['expenseID','expenseName','fundID','amount','operator',	'category1',	'category2',	'abstract',	'remark','applicationState'],
+        checkboxVal: defaultFormThead, // checkboxVal
+        formThead: defaultFormThead // 默认表头 Default header
+      }
+    },
+    watch: {
+      checkboxVal(valArr) {
+        this.formThead = this.formTheadOptions.filter(i => valArr.indexOf(i) >= 0)
+        this.key = this.key + 1// 为了保证table 每次都会重渲 In order to ensure the table will be re-rendered each time
+      }
     }
+
   }
-}
+
 </script>
-<style scoped>
-.container {
-  display: flex;
-}
 
-#chart-container {
-  height: 800px;
-  width: 50%;
-}
-
-#pie-container {
-  height: 800px;
-  width: 50%;
-}
-
-
-</style>
