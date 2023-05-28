@@ -106,7 +106,7 @@ def delete_fund(fundID):
 @cross_origin()
 def add_expense():
     # 获取请求中的参数
-    expenseID = request.json.get('expenseID')
+    expenseID = int(request.json.get('expenseID'))
     expenseName = request.json.get('expenseName')
     fundID = request.json.get('fundID')
     amount = request.json.get('amount')
@@ -129,7 +129,10 @@ def add_expense():
         'remark': remark,
         'applicationState': applicationState
     }
+    print(expenseID)
+    print(expense['expenseID'].values)
     if expenseID in expense['expenseID'].values:
+      print('error success')
       return jsonify({'error': f'Duplicated expenseID {expenseID}.'}), 404
     expense.loc[len(expense)] = new_expense
     expense.to_csv('expense.csv', index=False)
@@ -207,7 +210,7 @@ def modify_expense(expenseID):
 @cross_origin()
 def add_user():
     # 获取请求中的参数
-    userID = request.json.get('userID')
+    userID = int(request.json.get('userID'))
     userName = request.json.get('userName')
     privilege = request.json.get('privilege')
     # 创建新支出信息
