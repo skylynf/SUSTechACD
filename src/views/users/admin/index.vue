@@ -4,26 +4,6 @@
     <panel-group @handleSetLineChartData="handleSetLineChartData" />
 
     <el-row style="background:#fff;padding:16px 32px 0;margin-bottom:32px;">
-      <el-col :xs="24" :sm="24" :lg="10">
-        <div class="chart-wrapper">
-          <pie-chart />
-        </div>
-      </el-col>
-      <el-col :xs="24" :sm="24" :lg="8">
-        <div class="chart-wrapper">
-          <BarChart></BarChart>
-        </div>
-      </el-col>
-
-    </el-row>
-    <el-row style="background:#fff;padding:16px 32px 0;margin-bottom:32px;">
-      <el-col :xs="24" :sm="24" :lg="15">
-        <div class="chart-wrapper">
-          <active-user-cloud />
-        </div>
-      </el-col>
-    </el-row>
-    <el-row style="background:#fff;padding:16px 32px 0;margin-bottom:32px;">
       <el-col :xs="24" :sm="24" :lg="25">
         <div class="app-container">
           <div style="margin:0 0 5px 20px">
