@@ -44,7 +44,7 @@
   const url = 'http://127.0.0.1:5000/api/expenses/add';
 
   const data = {
-    expenseID: 1827328,
+    expenseID: 12,
     expenseName: '办公用品采购',
     fundID: 9374829,
     amount: 50,
@@ -76,7 +76,7 @@
     methods: {
       onSubmit() {
         console.log('submit!');
-        axios.post(url, data)
+        axios.post(url, this.form)
         .then(response => (this.info = response))
         .catch(function (error) { // 请求失败处理
             console.log(error);
