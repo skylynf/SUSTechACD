@@ -1,8 +1,9 @@
 import numpy as np
-from flask import Flask, request, jsonify, json
+from flask import Flask, request, jsonify, json, send_from_directory
 from flask_cors import CORS, cross_origin
 import pandas as pd
 import math
+import os
 
 app = Flask(__name__)
 CORS(app)
@@ -19,7 +20,7 @@ print(result)
 
 currentUser = '1'
 # API 1. 获取课题组全部经费完成情况（支出情况）：
-@app.route('/api/groups/<int:userID>/funds', methods=['GET'])  # 此处的userID，即为杨在文档中写的groupID，董认为userID和groupID是同一个东西
+@app.route('/api/users/<int:userID>/funds', methods=['GET'])  
 @cross_origin()
 def get_user_finish_performance(userID):
       select = fund[fund['userID'] == userID]
@@ -27,17 +28,45 @@ def get_user_finish_performance(userID):
         items = [{
             "expenses": expense[expense['fundID'] == select.iloc[_]['fundID']].to_json(),
             "fund": select.iloc[_].to_json()
-            # 杨在文档中说，执行率由前端计算。
-            # 如果由后端计算，如下所示，前端可作为参考
-            #, "fund_finish_performance": 0 if math.isnan(select.iloc[_]['usedQuota']) else select.iloc[_]['usedQuota'] / select.iloc[_]['totalQuota']
-          } for _ in range(len(select))]
+            } for _ in range(len(select))]
         return jsonify({'items': items}), 200
       else:
         return jsonify({'message': "This user doesn't have any fund."}), 200
 
 
+# API 1. 获取课题组全部经费完成情况（支出情况）Excel文件：
+@app.route('/api/users/<int:userID>/funds/excel', methods=['GET'])
+@cross_origin()
+def get_user_finish_performance_excel(userID):
+      select = fund[fund['userID'] == userID]
+      if len(select):
+        duo = pd.read_csv('多项经费使用一览表.csv')
+        count = 0
+        expense_3 = expense[expense['applicationState'] == 3]
+        for _ in select['fundID']:
+          count += 1
+          lst_expense_amount = list(expense_3[expense_3['fundID'] == _]['amount'])
+          sum_lea = sum(lst_expense_amount)
+          lst_expense_amount += [0] * (12 - len(lst_expense_amount))
+
+          l = list(select[select['fundID'] == _].iloc[0])
+          duo.loc[len(duo)] = [count] + l[:2] + ['有效期fixme', l[3]] + lst_expense_amount + [sum_lea, l[3] - sum_lea, '天数fixme', str('%.2f' % (sum_lea / l[3] * 100)) + '%', '是' if sum_lea / l[3] > 0.6 else '否']
+
+        zonge = sum(duo['经费总额'])
+        yue = sum(duo['经费余额'])
+        zxl = 1 - yue / zonge
+        duo.loc[len(duo)] = ['', '', '合计', '', zonge, '', '', '', '', '', '', '', '', '', '', '', '',
+                             sum(duo['已使用经费']), yue, '', str('%.2f' % (zxl * 100)) + '%',
+                             '是' if zxl > 0.6 else '否']
+        duo.to_excel('多项经费使用一览表.xlsx', index=False)
+
+        return send_from_directory(os.getcwd(), '多项经费使用一览表.xlsx', as_attachment=True)
+      else:
+        return jsonify({'message': "This user doesn't have any fund."}), 200
+
+
 # API 2. 查询若干个fundID的使用情况和执行率：
-@app.route('/api/funds/<fundIDs>/', methods=['GET'])  # 此处的userID，即为杨在文档中写的groupID，董认为userID和groupID是同一个东西
+@app.route('/api/funds/<fundIDs>/', methods=['GET'])
 @cross_origin()
 def get_fund_finish_performance(fundIDs):
       fundID_lst = fundIDs.split(",")
