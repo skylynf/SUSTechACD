@@ -129,7 +129,8 @@ def add_expense():
         'remark': remark,
         'applicationState': applicationState
     }
-    # 将新支出信息添加到列表中
+    if expenseID in expense['expenseID'].tolist():
+      return jsonify({'error': f'Duplicated expenseID {expenseID}.'}), 404
     expense.loc[len(expense)] = new_expense
     expense.to_csv('expense.csv', index=False)
 
@@ -156,45 +157,50 @@ def delete_expense(expenseID):
 @app.route('/api/expenses/submit/<int:expenseID>', methods=['POST'])
 @cross_origin()
 def submit_expense(expenseID):
-  expense.loc[expense['expenseID'] == expenseID, 'applicationState'] = 1
-  expense.to_csv('expense.csv', index=False)
-  print("expense submit successfully")
-  # 返回成功更新的响应
-  return jsonify({'message': 'Expense submit successfully'}), 200
+  if expenseID in expense['expenseID'].values:
+    expense.loc[expense['expenseID'] == expenseID, 'applicationState'] = 1
+    expense.to_csv('expense.csv', index=False)
+    print("expense submit successfully")
+    # 返回成功更新的响应
+    return jsonify({'message': 'Expense submit successfully'}), 200
+  else:
+    return jsonify({'error': f'Expense with expenseID {expenseID} not found.'}), 404
 
 #修改支出
 @app.route('/api/expenses/modify/<int:expenseID>', methods=['PUT'])
 @cross_origin()
 def modify_expense(expenseID):
     # 获取请求中的参数
-    # expenseID = request.json.get('expenseID')
-    expenseName = request.json.get('expenseName')
-    fundID = request.json.get('fundID')
-    amount = request.json.get('amount')
-    operator = request.json.get('operator')
-    category1 = request.json.get('category1')
-    category2 = request.json.get('category2')
-    abstract = request.json.get('abstract')
-    remark = request.json.get('remark')
-    applicationState = request.json.get('applicationState')
-    # 创建新支出信息
-    new_expense = {
-        'expenseID': expenseID,
-        'expenseName': expenseName,
-        'fundID': fundID,
-        'amount': amount,
-        'operator': operator,
-        'category1': category1,
-        'category2': category2,
-        'abstract': abstract,
-        'remark': remark,
-        'applicationState': applicationState
-    }
-    # 将新支出信息添加到列表中
-    index_to_update = expense[expense['expenseID'] == expenseID].index
-    expense.loc[index_to_update] = new_expense
-    expense.to_csv('expense.csv', index=False)
-    return jsonify(new_expense), 200
+    if expenseID in expense['expenseID'].values:
+      expenseName = request.json.get('expenseName')
+      fundID = request.json.get('fundID')
+      amount = request.json.get('amount')
+      operator = request.json.get('operator')
+      category1 = request.json.get('category1')
+      category2 = request.json.get('category2')
+      abstract = request.json.get('abstract')
+      remark = request.json.get('remark')
+      applicationState = request.json.get('applicationState')
+      # 创建新支出信息
+      new_expense = {
+          'expenseID': expenseID,
+          'expenseName': expenseName,
+          'fundID': fundID,
+          'amount': amount,
+          'operator': operator,
+          'category1': category1,
+          'category2': category2,
+          'abstract': abstract,
+          'remark': remark,
+          'applicationState': applicationState
+      }
+      # 将新支出信息添加到列表中
+      index_to_update = expense[expense['expenseID'] == expenseID].index
+      expense.loc[index_to_update] = new_expense
+      expense.to_csv('expense.csv', index=False)
+      return jsonify(new_expense), 200
+    else:
+      return jsonify({'error': f'Expense with expenseID {expenseID} not found.'}), 404
 
 #添加用户
 @app.route('/api/user/add', methods=['POST'])
@@ -211,6 +217,8 @@ def add_user():
         'privilege': privilege,
     }
     # 将新支出信息添加到列表中
+    if userID in users['userID'].values:
+      return jsonify({'error': f'Duplicated userID {userID}.'}), 404
     users.loc[len(users)] = new_user
     users.to_csv('user.csv', index=False)
     print(new_user)
@@ -222,21 +230,24 @@ def add_user():
 @cross_origin()
 def modify_user(userID):
     # 获取请求中的参数
-    userName = request.json.get('userName')
-    privilege = request.json.get('privilege')
-    # 创建新支出信息
-    new_user = {
-        'userID': userID,
-        'userName': userName,
-        'privilege': privilege,
-    }
-    # 将新支出信息添加到列表中
-    index_to_update = users[users['userID'] == userID].index
-    users.loc[index_to_update] = new_user
-    users.to_csv('user.csv', index=False)
-    print(new_user)
-    # 返回新增的支出信息
-    return jsonify(new_user), 201
+    if userID in users['userID'].values:
+      userName = request.json.get('userName')
+      privilege = request.json.get('privilege')
+      # 创建新支出信息
+      new_user = {
+          'userID': userID,
+          'userName': userName,
+          'privilege': privilege,
+      }
+      # 将新支出信息添加到列表中
+      index_to_update = users[users['userID'] == userID].index
+      users.loc[index_to_update] = new_user
+      users.to_csv('user.csv', index=False)
+      print(new_user)
+      # 返回新增的支出信息
+      return jsonify(new_user), 201
+    else:
+      return jsonify({'error': f'Expense with userID {userID} not found.'}), 404
 
 #删除用户
 @app.route('/api/user/delete/<int:userID>', methods=['DELETE'])
