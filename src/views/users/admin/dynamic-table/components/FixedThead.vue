@@ -47,7 +47,12 @@
           {{ scope.row[fruit] }}
         </template>
       </el-table-column>
-
+      <!--      <el-table-column label="操作">-->
+      <!--        <template slot-scope="scope">-->
+      <!--          &lt;!&ndash; 这里可以添加您自定义的按钮内容和行为 &ndash;&gt;-->
+      <!--          <el-button type="primary" size="small" @click="handleButtonClick(scope.row)">Go to his/her profile</el-button>-->
+      <!--        </template>-->
+      <!--      </el-table-column>-->
     </el-table>
   </div>
 </template>
@@ -62,7 +67,9 @@
   // document.getElementById("button1").addEventListener("click", changeChart);
   export default {
     mounted() {
-
+      // this.$nextTick(() => {
+      //   this.initChart()
+      // })
     },
     methods:{
       initChart(){
@@ -96,6 +103,7 @@
               abstract: result.abstract[j],
               remark: result.remark[j],
               applicationState: result.applicationState[j],
+
             }
             console.log(tuple.expenseID)
             if(tuple.expenseID!==undefined)
@@ -110,7 +118,18 @@
     data() {
       return {
         tableData: [
-
+          // {
+          //   name: 'fruit-1',
+          //   apple: 'apple-10',
+          //   banana: 'banana-10',
+          //   orange: 'orange-10'
+          // },
+          // {
+          //   name: 'fruit-2',
+          //   apple: 'apple-20',
+          //   banana: 'banana-20',
+          //   orange: 'orange-20'
+          // }
         ],
         key: 1, // table key
         formTheadOptions: ['expenseID','expenseName','fundID','amount','operator',	'category1',	'category2',	'abstract',	'remark','applicationState'],

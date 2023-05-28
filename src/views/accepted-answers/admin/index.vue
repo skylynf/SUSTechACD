@@ -1,45 +1,40 @@
-/* eslint-disable */
 <template>
   <div class="dashboard-editor-container">
 
     <panel-group @handleSetLineChartData="handleSetLineChartData" />
 
-    <!--    <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">-->
-    <!--      <line-chart :chart-data="lineChartData" />-->
-    <!--    </el-row>-->
+    <!-- <el-row style="background:#fff;padding:16px 16px 32px;margin-bottom:32px;">
+      <line-chart :chart-data="lineChartData" />
+    </el-row> -->
 
-    <div class="chart-container">
-      <chart height="70%" width="100%" />
-    </div>
-
-    <!--    <el-row :gutter="32">-->
-    <!--      <el-col :xs="24" :sm="24" :lg="8">-->
-    <!--        <div class="chart-wrapper">-->
-    <!--          <raddar-chart />-->
-    <!--        </div>-->
-    <!--      </el-col>-->
-    <!--      <el-col :xs="24" :sm="24" :lg="8">-->
-    <!--        <div class="chart-wrapper">-->
-    <!--          <pie-chart />-->
-    <!--        </div>-->
-    <!--      </el-col>-->
-    <!--      <el-col :xs="24" :sm="24" :lg="8">-->
-    <!--        <div class="chart-wrapper">-->
-    <!--          <bar-chart />-->
-    <!--        </div>-->
-    <!--      </el-col>-->
-    <!--    </el-row>-->
+    <el-row >
+      <el-col >
+        <div class="chart-wrapper">
+          <raddar-chart />
+        </div>
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-col :xs="24" :sm="24" :lg="8">
+        <div class="chart-wrapper">
+          <pie-chart />
+        </div>
+      </el-col>
+      <el-col :xs="24" :sm="24" :lg="8">
+        <div class="chart-wrapper">
+          <bar-chart />
+        </div>
+      </el-col>
+    </el-row>
   </div>
 </template>
-/* eslint-disable */
-<script>
 
+<script>
 import PanelGroup from './components/PanelGroup'
-// import LineChart from './components/LineChart'
-import Chart from '@/components/Charts/Keyboard'
-// import RaddarChart from './components/RaddarChart'
-// import PieChart from './components/PieChart'
-// import BarChart from './components/BarChart'
+import LineChart from './components/LineChart'
+import RaddarChart from './components/RaddarChart'
+import PieChart from './components/PieChart'
+import BarChart from './components/BarChart'
 import axios from 'axios'
 
 const lineChartData = {
@@ -53,11 +48,10 @@ export default {
   components: {
     // GithubCorner,
     PanelGroup,
-    // LineChart,
-    Chart
-    // RaddarChart
-    // PieChart,
-    // BarChart
+    LineChart,
+    RaddarChart,
+    PieChart,
+    BarChart
   },
   data() {
     return {
@@ -91,12 +85,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.chart-container{
-  position: relative;
-  width: 100%;
-  height: calc(100vh - 84px);
-}
-
 .dashboard-editor-container {
   padding: 32px;
   background-color: rgb(240, 242, 245);

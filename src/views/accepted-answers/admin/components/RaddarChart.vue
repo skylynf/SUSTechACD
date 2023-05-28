@@ -1,4 +1,74 @@
 <template>
+  <el-form ref="form" :model="form" label-width="80px">
+    <div style="margin: 20px;">增加经费</div>
+    <el-form-item label="经费号">
+      <el-input v-model="form.fundID"></el-input>
+    </el-form-item>
+    <el-form-item label="经费名称">
+      <el-input v-model="form.fundName"></el-input>
+    </el-form-item>
+    <el-form-item label="课题组">
+      <el-input v-model="form.userID"></el-input>
+    </el-form-item>
+    <el-form-item label="经费总额度">
+      <el-input v-model="form.totalQuota"></el-input>
+    </el-form-item>
+    <el-form-item label="已使用额度">
+      <el-input v-model="form.usedQuota"></el-input>
+    </el-form-item>
+    <el-form-item label="经费内容摘要">
+      <el-input v-model="form.abstract"></el-input>
+    </el-form-item>
+    <el-form-item label="备注">
+      <el-input v-model="form.remark"></el-input>
+    </el-form-item>
+    <el-form-item>
+      <el-button type="primary" @click="onSubmit">立即创建</el-button>
+    </el-form-item>
+  </el-form>
+</template>
+
+
+<script>
+  import axios from 'axios'
+
+  const url = 'http://127.0.0.1:5000/api/funds/add';
+
+  export default {
+    data() {
+      return {
+        form: {
+          fundID: '',
+          fundName: '',
+          userID: '',
+          totalQuota: '',
+          usedQuota: '',
+          abstract: '',
+          remark: ''
+        }
+      }
+    },
+    methods: {
+      onSubmit() {
+        console.log('submit!');
+        axios.post(url, this.form)
+        .then(response => {
+          console.log(response.data)
+        })
+        .catch(function (error) { // 请求失败处理
+            console.log(error);
+          });
+      }
+    }
+  }
+</script>
+
+
+
+
+
+
+<!-- <template>
   <div :class="className" :style="{height:height,width:width}" />
 </template>
 
@@ -113,4 +183,4 @@ export default {
     }
   }
 }
-</script>
+</script> -->
