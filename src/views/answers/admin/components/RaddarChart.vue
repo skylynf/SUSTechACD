@@ -69,6 +69,7 @@
         })
         .catch(function (error) { // 请求失败处理
             console.log(error);
+            console.log(response.data);
           });
       }
     }
