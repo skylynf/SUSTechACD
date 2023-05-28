@@ -151,9 +151,9 @@ def add_expense():
     # 获取 totalQuota 和 usedQuota 列的值
     totalQuota = filtered_df['totalQuota'].values[0]
     usedQuota = filtered_df['usedQuota'].values[0]
-    if float(usedQuota) + amount > totalQuota:
+    if float(usedQuota) + amount > float(totalQuota):
       return jsonify({'error': f'expense exceed total quota.'}), 404
-    usedQuota = usedQuota + amount
+    usedQuota = float(usedQuota) + amount
     mask = fund['fundID'] == fundID
     fund.loc[mask, 'usedQuota'] = usedQuota
     print(expense['expenseID'].values)
@@ -229,9 +229,9 @@ def modify_expense(expenseID):
       filtered_df = fund[fund['fundID'] == fundID]
       totalQuota = filtered_df['totalQuota'].values[0]
       usedQuota = filtered_df['usedQuota'].values[0]
-      if float(usedQuota) + amount - float(old_amount) > totalQuota:
+      if float(usedQuota) + amount - float(old_amount) > float(totalQuota):
         return jsonify({'error': f'expense exceed total quota.'}), 404
-      usedQuota = usedQuota + amount
+      usedQuota = float(usedQuota) + amount - float(old_amount)
       mask = fund['fundID'] == fundID
       fund.loc[mask, 'usedQuota'] = usedQuota
       index_to_update = expense[expense['expenseID'] == expenseID].index

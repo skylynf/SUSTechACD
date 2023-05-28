@@ -2,4 +2,5 @@ fundID,fundName,userID,totalQuota,usedQuota,abstract,remark
 5433912,国自然,12,500.0,11.0,this is a abstract,no remark
 9374829,省科技攻关,23,300.0,67.0,incomplete procedures,handle it ASAP
 123,1,1,1000.0,500.0,500,500
-1234,1,1,1000.0,900.0,500,500
+1234,1,1,1000.0,1200.0,500,500
+777,1,1,1000.0,900.0,500,500
