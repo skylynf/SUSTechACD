@@ -125,13 +125,13 @@ def add_expense():
       return jsonify({'error': f'Duplicated expenseID {expenseID}.'}), 404
     expenseName = request.json.get('expenseName')
     fundID = int(request.json.get('fundID'))
-    amount = int(request.json.get('amount'))
+    amount = float(request.json.get('amount'))
     operator = request.json.get('operator')
     category1 = request.json.get('category1')
     category2 = request.json.get('category2')
     abstract = request.json.get('abstract')
     remark = request.json.get('remark')
-    applicationState = request.json.get('applicationState')
+    applicationState = int(request.json.get('applicationState'))
     # 创建新支出信息
     new_expense = {
         'expenseID': expenseID,
@@ -196,14 +196,14 @@ def modify_expense(expenseID):
     # 获取请求中的参数
     if expenseID in expense['expenseID'].values:
       expenseName = request.json.get('expenseName')
-      fundID = request.json.get('fundID')
-      amount = request.json.get('amount')
+      fundID = int(request.json.get('fundID'))
+      amount = float(request.json.get('amount'))
       operator = request.json.get('operator')
       category1 = request.json.get('category1')
       category2 = request.json.get('category2')
       abstract = request.json.get('abstract')
       remark = request.json.get('remark')
-      applicationState = request.json.get('applicationState')
+      applicationState = int(request.json.get('applicationState'))
       # 创建新支出信息
       new_expense = {
           'expenseID': expenseID,
@@ -232,7 +232,7 @@ def add_user():
     # 获取请求中的参数
     userID = int(request.json.get('userID'))
     userName = request.json.get('userName')
-    privilege = request.json.get('privilege')
+    privilege = int(request.json.get('privilege'))
     # 创建新支出信息
     new_user = {
         'userID': userID,
@@ -255,7 +255,7 @@ def modify_user(userID):
     # 获取请求中的参数
     if userID in users['userID'].values:
       userName = request.json.get('userName')
-      privilege = request.json.get('privilege')
+      privilege = int(request.json.get('privilege'))
       # 创建新支出信息
       new_user = {
           'userID': userID,
