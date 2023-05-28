@@ -129,7 +129,7 @@ def add_expense():
         'remark': remark,
         'applicationState': applicationState
     }
-    if expenseID in expense['expenseID'].tolist():
+    if expenseID in expense['expenseID'].values:
       return jsonify({'error': f'Duplicated expenseID {expenseID}.'}), 404
     expense.loc[len(expense)] = new_expense
     expense.to_csv('expense.csv', index=False)
