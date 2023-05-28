@@ -193,6 +193,7 @@ def submit_expense(expenseID):
 @app.route('/api/expenses/modify/<int:expenseID>', methods=['PUT'])
 @cross_origin()
 def modify_expense(expenseID):
+    print(expenseID)
     # 获取请求中的参数
     if expenseID in expense['expenseID'].values:
       expenseName = request.json.get('expenseName')
