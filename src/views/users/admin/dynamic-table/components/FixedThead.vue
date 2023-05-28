@@ -83,24 +83,23 @@
           this.tableData=[];
           // var x=result.expenseID.key;
           // console.log(x)
-          for(var i=0;i<100;i++){
-            var j=i.toString();
-            var tuple = {
-              expenseID: result.expenseID[j],
-              expenseName: result.expenseName[j],
-              fundID: result.fundID[j],
-              amount: result.amount[j],
-              operator: result.operator[j],
-              category1: result.category1[j],
-              category2: result.category2[j],
-              abstract: result.abstract[j],
-              remark: result.remark[j],
-              applicationState: result.applicationState[j],
-            }
-            console.log(tuple.expenseID)
-            if(tuple.expenseID!==undefined)
-            this.tableData.push(tuple);
+          
+          var tuple = {
+            expenseID: result.expenseID,
+            expenseName: result.expenseName,
+            fundID: result.fundID,
+            amount: result.amount,
+            operator: result.operator,
+            category1: result.category1,
+            category2: result.category2,
+            abstract: result.abstract,
+            remark: result.remark,
+            applicationState: result.applicationState,
           }
+          console.log(tuple.expenseID)
+          if(tuple.expenseID!==undefined)
+          this.tableData.push(tuple);
+          
 
 
           console.log(this.tableData)
