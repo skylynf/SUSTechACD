@@ -1,3 +1,4 @@
+import numpy as np
 from flask import Flask, request, jsonify, json
 from flask_cors import CORS, cross_origin
 import pandas as pd
@@ -8,7 +9,8 @@ CORS(app)
 expense = pd.read_csv('expense.csv')
 users = pd.read_csv('user.csv')
 fund = pd.read_csv('fund.csv')
-
+filtered_df = fund[fund['fundID'] == 5433912]
+totalQuota = filtered_df['totalQuota'].values[0]
 
 # API 1. 获取课题组全部经费完成情况（支出情况）：
 @app.route('/api/groups/<int:userID>/funds', methods=['GET'])  # 此处的userID，即为杨在文档中写的groupID，董认为userID和groupID是同一个东西
@@ -122,8 +124,8 @@ def add_expense():
       print('error success')
       return jsonify({'error': f'Duplicated expenseID {expenseID}.'}), 404
     expenseName = request.json.get('expenseName')
-    fundID = request.json.get('fundID')
-    amount = request.json.get('amount')
+    fundID = int(request.json.get('fundID'))
+    amount = int(request.json.get('amount'))
     operator = request.json.get('operator')
     category1 = request.json.get('category1')
     category2 = request.json.get('category2')
