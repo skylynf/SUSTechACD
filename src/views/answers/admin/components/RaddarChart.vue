@@ -64,11 +64,13 @@
       onSubmit() {
         console.log('submit!');
         axios.post(url, this.form)
-        .then(response => (this.info = response))
+        .then(response => {
+          console.log(response.data)
+        })
         .catch(function (error) { // 请求失败处理
             console.log(error);
           });
-        }
+      }
     }
   }
 </script>

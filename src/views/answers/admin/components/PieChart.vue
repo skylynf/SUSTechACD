@@ -1,4 +1,50 @@
 <template>
+  <div class="app-container">
+    <div class="filter-container">
+      <div style="margin:0 0 5px 20px">
+        <input type="text"  ref="queryexpenseID">
+        <el-button type=“button” @click="changeChart">删除支出</el-button>
+      </div>
+    </div>
+    <!--经费编号	经费名称	课题组	经办人	支出类别一级	支出类别二级	内容摘要	支出金额（元）-->
+    
+  </div>
+</template>
+
+<script>
+  import axios from 'axios'
+  // import echarts from 'echarts'
+
+  // document.getElementById("button1").addEventListener("click", changeChart);
+  export default {
+    mounted() {
+    },
+    methods:{
+      changeChart(){
+        var ID=this.$refs.queryexpenseID.value;
+        // var ID='1827328'
+        var url='http://127.0.0.1:5000/api/expenses/delete/'+ID;
+        
+        axios.delete(url).then(response => {
+           console.log(response.data)
+        })
+      }
+    },
+    data() {
+      return {
+      }
+    },
+  }
+
+</script>
+
+
+
+
+
+
+
+<!-- <template>
   <div :class="className" :style="{height:height,width:width}" />
 </template>
 
@@ -76,4 +122,4 @@ export default {
     }
   }
 }
-</script>
+</script> -->
