@@ -125,7 +125,7 @@ def add_expense():
       return jsonify({'error': f'Duplicated expenseID {expenseID}.'}), 404
     expenseName = request.json.get('expenseName')
     fundID = int(request.json.get('fundID'))
-    if fundID in fund['fundID'].values:
+    if fundID not in fund['fundID'].values:
       return jsonify({'error': f'Unkowen fundID {expenseID}.'}), 404
     amount = float(request.json.get('amount'))
     operator = request.json.get('operator')
