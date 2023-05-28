@@ -1,33 +1,103 @@
 from flask import Flask, request, jsonify, json
 from flask_cors import CORS, cross_origin
 import pandas as pd
+import math
 
 app = Flask(__name__)
 CORS(app)
 expense = pd.read_csv('expense.csv')
 users = pd.read_csv('user.csv')
+fund = pd.read_csv('fund.csv')
 
-@app.route('/api/expenses/<int:expenseID>', methods=['GET', 'POST'])
+
+# API 1. 获取课题组全部经费完成情况（支出情况）：
+@app.route('/api/groups/<int:userID>/funds', methods=['GET'])  # 此处的userID，即为杨在文档中写的groupID，董认为userID和groupID是同一个东西
+@cross_origin()
+def get_user_finish_performance(userID):
+      select = fund[fund['userID'] == userID]
+      if len(select):
+        items = [{
+            "expenses": expense[expense['fundID'] == select.iloc[_]['fundID']].to_json(),
+            "fund": select.iloc[_].to_json()
+            # 杨在文档中说，执行率由前端计算。
+            # 如果由后端计算，如下所示，前端可作为参考
+            #, "fund_finish_performance": 0 if math.isnan(select.iloc[_]['usedQuota']) else select.iloc[_]['usedQuota'] / select.iloc[_]['totalQuota']
+          } for _ in range(len(select))]
+        return jsonify({'items': items}), 200
+      else:
+        return jsonify({'message': "This user doesn't have any fund."}), 200
+
+
+# API 2. 查询若干个fundID的使用情况和执行率：
+@app.route('/api/funds/<fundIDs>/', methods=['GET'])  # 此处的userID，即为杨在文档中写的groupID，董认为userID和groupID是同一个东西
+@cross_origin()
+def get_fund_finish_performance(fundIDs):
+      fundID_lst = fundIDs.split(",")
+      items = []
+      for _ in fundID_lst:
+        fundID = int(_)
+        select = fund[fund['fundID'] == fundID]
+        items.append(select.to_json() if len(select) else {'error': f'Fund with fundID {fundID} not found.'})
+      return jsonify({'items': items}), 200
+
+
+# API 1. 查询一笔支出的申请情况：
+@app.route('/api/expenses/<int:expenseID>', methods=['GET'])
 @cross_origin()
 def get_expense_by_id(expenseID):
-    if request.method == 'GET':
-        select = expense.loc[expense['expenseID'] == expenseID]
-        if len(select):
-          return jsonify(select.to_json()), 200
-        else:
-          return jsonify({'error': f'Expense with expenseID {expenseID} not found.'}), 404
-
-    # elif request.method == 'POST':
-    #     # 处理 POST 请求
-    #     json_data = request.get_json()
-    #     if json_data:
-    #         data = {'message': 'Received data: {}'.format(json_data)}
-    #         return jsonify(data)
-    #     else:
-    #         return jsonify({'error': 'Invalid JSON'}), 400
+      select = expense.loc[expense['expenseID'] == expenseID]
+      if len(select):
+        return jsonify(select.to_json()), 200
+      else:
+        return jsonify({'error': f'Expense with expenseID {expenseID} not found.'}), 404
 
 
+# API 2. 查询待审批的所有支出列表：
+@app.route('/api/expenses/pending', methods=['GET'])
+@cross_origin()
+def get_pending_expense():
+      select = expense.loc[expense['applicationState'] == 1]  # 1:待审批; 0:已审批
+      if len(select):
+        return jsonify(select.to_json()), 200
+      else:
+        return jsonify({'message': "There is no pending expense."}), 200
 
+
+# API 3. 增加一个经费：
+@app.route('/api/funds/add', methods=['POST'])
+@cross_origin()
+def add_fund():
+      fundName = request.json.get('fundName')  # request.form.get
+      userID = request.json.get('userID')
+      totalQuota = request.json.get('totalQuota')
+
+      if fundName and userID and totalQuota:
+          new_fund = {
+            'fundID': int(fund.loc[len(fund) - 1]['fundID'] + 1),
+            # 杨写的API，没有给fundID，董认为必须有fundID，否则后面无法删除
+            # 暂时将fundID设为：此前最后一条fund的fundID + 1
+            'fundName': fundName,
+            'userID': userID,
+            'totalQuota': totalQuota,
+          }
+          fund.loc[len(fund)] = new_fund
+          fund.to_csv('fund.csv', index=False)
+          return jsonify(new_fund), 201    # 返回值包含新生成的fundID
+      else:
+          return jsonify({'error': 'Invalid request params'}), 400
+
+
+# API 3. 删除一个经费：
+@app.route('/api/funds/delete/<int:fundID>', methods=['DELETE'])
+@cross_origin()
+def delete_fund(fundID):
+    if fundID in fund['fundID'].values:
+        fund.drop(fund[fund['fundID'] == fundID].index, inplace=True)
+        fund.reset_index(drop=True, inplace=True)
+        fund.to_csv('fund.csv', index=False)
+        return jsonify({'message': f'Fund with fundID {fundID} deleted successfully.'}), 200
+    else:
+        return jsonify({'error': f'Fund with fundID {fundID} not found.'}), 404
 
 
 # 增加支出
