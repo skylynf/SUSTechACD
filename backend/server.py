@@ -45,7 +45,7 @@ def get_fund_finish_performance(fundIDs):
 @app.route('/api/expenses/<int:expenseID>', methods=['GET'])
 @cross_origin()
 def get_expense_by_id(expenseID):
-      select = expense.loc[expense['expenseID'] == expenseID]
+      select = expense.loc[expense['expenseID'] == expenseID].iloc[0]
       if len(select):
         return jsonify(select.to_json()), 200
       else:
