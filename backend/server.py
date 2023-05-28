@@ -125,7 +125,7 @@ def add_expense():
       return jsonify({'error': f'Duplicated expenseID {expenseID}.'}), 404
     expenseName = request.json.get('expenseName')
     fundID = int(request.json.get('fundID'))
-    if fundID in fund['fundID'].values:
+    if fundID not in fund['fundID'].values:
       return jsonify({'error': f'Unkowen fundID {expenseID}.'}), 404
     amount = float(request.json.get('amount'))
     operator = request.json.get('operator')
@@ -151,7 +151,7 @@ def add_expense():
     # 获取 totalQuota 和 usedQuota 列的值
     totalQuota = filtered_df['totalQuota'].values[0]
     usedQuota = filtered_df['usedQuota'].values[0]
-    if usedQuota + amount > totalQuota:
+    if float(usedQuota) + amount > totalQuota:
       return jsonify({'error': f'expense exceed total quota.'}), 404
     usedQuota = usedQuota + amount
     mask = fund['fundID'] == fundID
@@ -159,6 +159,7 @@ def add_expense():
     print(expense['expenseID'].values)
     expense.loc[len(expense)] = new_expense
     expense.to_csv('expense.csv', index=False)
+    fund.to_csv('fund.csv', index=False)
     # 返回新增的支出信息
     return jsonify(new_expense), 201
 
@@ -200,7 +201,7 @@ def modify_expense(expenseID):
     if expenseID in expense['expenseID'].values:
       expenseName = request.json.get('expenseName')
       fundID = int(request.json.get('fundID'))
-      if fundID in fund['fundID'].values:
+      if fundID not in fund['fundID'].values:
         return jsonify({'error': f'Unkowen fundID {expenseID}.'}), 404
       amount = float(request.json.get('amount'))
       operator = request.json.get('operator')
@@ -226,7 +227,7 @@ def modify_expense(expenseID):
       filtered_df = fund[fund['fundID'] == fundID]
       totalQuota = filtered_df['totalQuota'].values[0]
       usedQuota = filtered_df['usedQuota'].values[0]
-      if usedQuota + amount > totalQuota:
+      if float(usedQuota) + amount > totalQuota:
         return jsonify({'error': f'expense exceed total quota.'}), 404
       usedQuota = usedQuota + amount
       mask = fund['fundID'] == fundID
@@ -234,6 +235,7 @@ def modify_expense(expenseID):
       index_to_update = expense[expense['expenseID'] == expenseID].index
       expense.loc[index_to_update] = list(new_expense.values())
       expense.to_csv('expense.csv', index=False)
+      fund.to_csv('fund.csv', index=False)
       return jsonify(new_expense), 200
     else:
       return jsonify({'error': f'Expense with expenseID {expenseID} not found.'}), 404
