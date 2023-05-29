@@ -109,11 +109,8 @@
         axios.put(url, this.ruleForm)
         .then(response => {
           console.log(response.data)
+          alert('修改成功！');
         })
-        .catch(error => {
-          const errorMessage = error.response.data.error;
-          alert(errorMessage);
-        });
       }
     }
   }
