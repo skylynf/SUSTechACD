@@ -49,13 +49,13 @@ export const constantRoutes = [
   {
     path: '/',
     component: Layout,
-    redirect: '/funds',
+    redirect: '/display',
     children: [
       {
-        path: 'funds',
-        component: () => import('@/views/accepted-answers/index'),
-        name: 'funds',
-        meta: { title: '经费', icon: 'education', affix: true }
+        path: 'display',
+        component: () => import('@/views/charts/line.vue'),
+        name: 'display',
+        meta: { title: '展示', icon: 'education', affix: true }
       }
     ]
   },
