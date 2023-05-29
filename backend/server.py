@@ -278,7 +278,7 @@ def modify_expense(expenseID):
       fundID = int(request.json.get('fundID'))
       fundIDs = fund.loc[fund['userID'] == currentUser, 'fundID'].unique().tolist()
       if fundID not in fundIDs:
-        return jsonify({'error': f'Wrong fundID {expenseID}.'}), 404
+        return jsonify({'error': f'Wrong fundID {fundID}.'}), 404
       amount = float(request.json.get('amount'))
       operator = request.json.get('operator')
       category1 = request.json.get('category1')
