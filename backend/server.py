@@ -101,7 +101,8 @@ def get_fund_finish_performance(fundIDs):
       for _ in fundID_lst:
         fundID = int(_)
         select = fund[fund['fundID'] == fundID]
-        items.append(select.iloc[0].to_dict() if len(select) else {'error': f'Fund with fundID {fundID} not found.'})
+        if len(select):
+          items.append(select.iloc[0].to_dict())
       return jsonify({'items': items}), 200
 
 
@@ -279,7 +280,7 @@ def modify_expense(expenseID):
       fundID = int(request.json.get('fundID'))
       fundIDs = fund.loc[fund['userID'] == currentUser, 'fundID'].unique().tolist()
       if fundID not in fundIDs:
-        return jsonify({'error': f'Wrong fundID {expenseID}.'}), 404
+        return jsonify({'error': f'Wrong fundID {fundID}.'}), 404
       amount = float(request.json.get('amount'))
       operator = request.json.get('operator')
       category1 = request.json.get('category1')
