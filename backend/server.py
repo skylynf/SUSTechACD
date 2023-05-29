@@ -17,25 +17,34 @@ totalQuota = filtered_df['totalQuota'].values[0]
 result = fund[fund['userID'] == 1]['fundID'].tolist()
 result = expense[expense['fundID'].isin(result)]
 print(result)
-
+items = []
+user_funds = fund[fund['userID'] == '1']
+if len(user_funds):
+  for row in range(len(user_funds)):
+    amounts = expense[expense['fundID'] == user_funds.iloc[row]['fundID']]['amount'].tolist()
+    fund_dic = user_funds.iloc[row].to_dict()
+    for i in range(len(amounts)):
+      fund_dic[f'amount{i}'] = amounts[i]
+    items.append(fund_dic)
+print(json.dumps(items))
 currentUser = '1'
 # API 1. 获取课题组全部经费完成情况（支出情况）：
-@app.route('/api/users/<userID>/funds', methods=['GET'])
-@cross_origin()
-def get_user_finish_performance(userID):
-      select = fund[fund['userID'] == userID]
-      if len(select):
-        items = []
-        for _ in range(len(select)):
-          select2 = expense[expense['fundID'] == select.iloc[_]['fundID']]
-          item = {
-            "expenses": [select2.iloc[_].to_dict() for _ in range(len(select2))],
-            "fund": select.iloc[_].to_dict()
-          }
-          items.append(item)
-        return jsonify({'items': items}), 200
-      else:
-        return jsonify({'message': "This user doesn't have any fund."}), 200
+# @app.route('/api/users/<userID>/funds', methods=['GET'])
+# @cross_origin()
+# def get_user_finish_performance(userID):
+#       select = fund[fund['userID'] == userID]
+#       if len(select):
+#         items = []
+#         for _ in range(len(select)):
+#           select2 = expense[expense['fundID'] == select.iloc[_]['fundID']]
+#           item = {
+#             "expenses": [select2.iloc[_].to_dict() for _ in range(len(select2))],
+#             "fund": select.iloc[_].to_dict()
+#           }
+#           items.append(item)
+#         return jsonify({'items': items}), 200
+#       else:
+#         return jsonify({'message': "This user doesn't have any fund."}), 200
 
 
 # API 1. 获取课题组全部经费完成情况（支出情况）Excel文件：
@@ -402,6 +411,39 @@ def find_all_expenses():
   result = expense[expense['fundID'].isin(result)]
   print(result.to_json(orient='records'))
   return result.to_json(orient='records'), 200
+
+
+@app.route('/api/users/<userID>/funds', methods=['GET'])
+@cross_origin()
+def get_user_finish_performance_new(userID):
+      # select = fund[fund['userID'] == userID]
+      # if len(select):
+      #   items = []
+      #   for _ in range(len(select)):
+      #     select2 = expense[expense['fundID'] == select.iloc[_]['fundID']]
+      #     item = {
+      #       "expenses": [select2.iloc[_].to_dict() for _ in range(len(select2))],
+      #       "fund": select.iloc[_].to_dict()
+      #     }
+      #     items.append(item)
+      #   return jsonify({'items': items}), 200
+      # else:
+      #   return jsonify({'message': "This user doesn't have any fund."}), 200
+      items = []
+      user_funds = fund[fund['userID'] == userID]
+      print((user_funds))
+      if len(user_funds):
+        for row in range(len(user_funds)):
+          amounts = expense[expense['fundID'] == user_funds.iloc[row]['fundID']]['amount'].tolist()
+          fund_dic = user_funds.iloc[row].to_dict()
+          for i in range(len(amounts)):
+            fund_dic[f'amount{i}'] = amounts[i]
+          items.append(fund_dic)
+          print(json.dumps(items))
+        return json.dumps(items), 200
+      else:
+        return jsonify({'message': "This user doesn't have any fund."}), 404
+
 
 
 if __name__ == '__main__':
