@@ -452,7 +452,7 @@ def get_user_finish_performance_new():
       #   return jsonify({'items': items}), 200
       # else:
       #   return jsonify({'message': "This user doesn't have any fund."}), 200
-      userID = request.json.get('userID')
+      userID = request.args.get('userID')
       items = []
       print(userID)
       if userID is not None and currentUser == 1:
