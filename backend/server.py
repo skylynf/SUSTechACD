@@ -11,9 +11,7 @@ app = Flask(__name__)
 CORS(app)
 expense = pd.read_csv('expense.csv')
 users = pd.read_csv('user.csv')
-users['userID'] = users['userID'].astype(str)
 fund = pd.read_csv('fund.csv')
-fund['userID'] = fund['userID'].astype(str)
 filtered_df = fund[fund['fundID'] == 5433912]
 totalQuota = filtered_df['totalQuota'].values[0]
 result = fund[fund['userID'] == 1]['fundID'].tolist()
@@ -59,6 +57,8 @@ print(json.dumps(week))
 @app.route('/api/users/<userID>/funds/excel', methods=['GET'])
 @cross_origin()
 def get_user_finish_performance_excel(userID):
+      userID = userID if currentUser == 1 else currentUser
+
       select = fund[fund['userID'] == userID]
       if len(select):
         duo = pd.read_csv('多项经费使用一览表.csv')
@@ -83,9 +83,7 @@ def get_user_finish_performance_excel(userID):
 
         return send_from_directory(os.getcwd(), '多项经费使用一览表.xlsx', as_attachment=True)
       else:
-        return jsonify({'message': "This user doesn't have any fund."}), 200
-
-
+        return jsonify({'message': "This user doesn't have any fund."}), 404
 # API 2. 查询若干个fundID的使用情况和执行率：
 @app.route('/api/funds/<fundIDs>/', methods=['GET'])
 @cross_origin()
@@ -141,6 +139,7 @@ def add_fund():
           'usedQuota': usedQuota,
           'abstract': abstract,
           'remark': remark,
+          'createDate' : time.time()
       }
 
       print(fundID)
@@ -368,20 +367,31 @@ def delete_user(userID):
         return jsonify({'error': f'User with userID {userID} not found.'}), 404
 
 
-
-def export_user_fund():
+# API 导出 经费使用汇总表.xlsx：
+@app.route('/api/funds/<userID>/excel', methods=['GET'])
+@cross_origin()
+def export_user_fund(userID):
   global fund
-  remainQuota = fund['totalQuota'] - fund['usedQuota']
-  executeRate = fund['usedQuota'] / fund['totalQuota']
-  fund['remainQuota'] = remainQuota
-  fund['executeRate'] = executeRate
-  fund = fund.drop('remark', axis=1)
-  fund = fund.drop('abstract', axis=1)
-  fund.rename(columns={'fundID': '经费编号', 'fundName': '经费名称', 'userID': '课题组', 'totalQuota': '可使用经费总额'
-    , 'usedQuota': '已使用经费', 'remainQuota': '经费余额', 'executeRate': '执行率'}, inplace=True)
-  fund.to_csv('经费使用汇总表.csv')
-  fund = pd.read_csv('fund.csv')
 
+  userID = userID if currentUser == 1 else currentUser
+  fund_select = fund[fund['userID'] == userID].reset_index(drop=True)
+
+  fund_select['remainQuota'] = fund_select['totalQuota'] - fund_select['usedQuota']
+  fund_select['executeRate'] = fund_select['usedQuota'] / fund_select['totalQuota']
+  del fund_select['remark']
+  del fund_select['abstract']
+
+  fund_select.rename(columns={'fundID': '经费编号', 'fundName': '经费名称', 'userID': '课题组', 'totalQuota': '可使用经费总额'
+    , 'usedQuota': '已使用经费', 'remainQuota': '经费余额', 'executeRate': '执行率'}, inplace=True)
+  fund_select['执行率是否达标'] = fund_select['执行率'].map(lambda _: '是' if _ > 0.6 else '否')
+
+  zonge = sum(fund_select['可使用经费总额'])
+  yue = sum(fund_select['经费余额'])
+  zxl = 1 - yue / zonge
+  fund_select.loc[len(fund_select)] = ['', '', '合计', zonge, zonge-yue, yue, str('%.2f' % (zxl * 100)) + '%',
+                                       '是' if zxl > 0.6 else '否']
+  fund_select.to_excel('经费使用汇总表.xlsx', index=False)
+  return send_from_directory(os.getcwd(), '经费使用汇总表.xlsx', as_attachment=True)
 
 
 @app.route('/api/users/login', methods=['GET'])
@@ -418,7 +428,7 @@ def reject_pending(expenseID):
 @app.route('/api/expenses/findAll', methods=['GET'])
 @cross_origin()
 def find_all_expenses():
-  if currentUser == '1':
+  if currentUser == 1:
     return expense.to_json(orient='records'), 200
   result = fund[fund['userID'] == currentUser]['fundID'].tolist()
   result = expense[expense['fundID'].isin(result)]
@@ -426,9 +436,9 @@ def find_all_expenses():
   return result.to_json(orient='records'), 200
 
 
-@app.route('/api/users/<userID>/funds', methods=['GET'])
+@app.route('/api/users/funds', methods=['GET'])
 @cross_origin()
-def get_user_finish_performance_new(userID):
+def get_user_finish_performance_new():
       # select = fund[fund['userID'] == userID]
       # if len(select):
       #   items = []
@@ -442,9 +452,18 @@ def get_user_finish_performance_new(userID):
       #   return jsonify({'items': items}), 200
       # else:
       #   return jsonify({'message': "This user doesn't have any fund."}), 200
+      userID = request.json.get('userID')
       items = []
-      user_funds = fund[fund['userID'] == userID]
-      print((user_funds))
+      print(userID)
+      if userID is not None and currentUser == 1:
+        userID = int(userID)
+        user_funds = fund[fund['userID'] == userID]
+      else:
+        if currentUser == 1:
+          user_funds = fund
+        else:
+          user_funds = fund[fund['userID'] == currentUser]
+      print(user_funds)
       if len(user_funds):
         for row in range(len(user_funds)):
           amounts = expense[expense['fundID'] == user_funds.iloc[row]['fundID']]['amount'].tolist()
@@ -452,15 +471,17 @@ def get_user_finish_performance_new(userID):
           for i in range(len(amounts)):
             fund_dic[f'amount{i}'] = amounts[i]
           items.append(fund_dic)
-          print(json.dumps(items))
+        print(json.dumps(items))
         return json.dumps(items), 200
       else:
         return jsonify({'message': "This user doesn't have any fund."}), 404
 
-@app.route('/api/chart', methods=['GET'])
+@app.route('/api/chart/expense', methods=['GET'])
 @cross_origin()
 def generate_time_list():
   week = {}
+  for i in range(10):
+    week[f"第{i}周"] = 0
   id_amount_dict = expense.set_index('expenseID')['amount'].to_dict()
   id_dict = expense.set_index('expenseID')['createDate'].to_dict()
   for expenseID in id_dict.keys():
@@ -470,6 +491,23 @@ def generate_time_list():
       week[dateWeek] = week[dateWeek] + id_amount_dict[expenseID]
     else:
       week[dateWeek] = id_amount_dict[expenseID]
+  return json.dumps(week)
+
+@app.route('/api/chart/fund', methods=['GET'])
+@cross_origin()
+def generate_time_list_fund():
+  week = {}
+  for i in range(10):
+    week[f"第{i}周"] = 0
+  id_totalQuota_dic = fund.set_index('fundID')['totalQuota'].to_dict()
+  id_createData = fund.set_index('fundID')['createDate'].to_dict()
+  for fundID in id_totalQuota_dic.keys():
+    dateWeek = int((id_createData[fundID] - initialTime) / 60 / 60 / 24 / 7)
+    dateWeek = f"第{dateWeek}周"
+    if dateWeek in week.keys():
+      week[dateWeek] = week[dateWeek] + id_totalQuota_dic[fundID]
+    else:
+      week[dateWeek] = id_totalQuota_dic[fundID]
   return json.dumps(week)
 if __name__ == '__main__':
     app.run(debug=True)
