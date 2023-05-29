@@ -77,12 +77,18 @@ export default {
     approve(e){
       var url='http://127.0.0.1:5000/api/users/'+e.expenseID+'/accept';
       console.log((e.expenseID))
-      axios.post(url);
+      axios.post(url).catch(error => {
+          const errorMessage = error.response.data.error;
+          alert(errorMessage);
+        });
     },
     reject(e){
       var url='http://127.0.0.1:5000/api/users/'+e.expenseID+'/reject';
       console.log((e.expenseID))
-      axios.post(url);
+      axios.post(url).catch(error => {
+          const errorMessage = error.response.data.error;
+          alert(errorMessage);
+        });
     },
     changeChart() {
       var url = 'http://127.0.0.1:5000/api/expenses/pending' ;
@@ -121,6 +127,10 @@ export default {
 
         console.log(this.tableData)
       })
+      .catch(error => {
+          const errorMessage = error.response.data.error;
+          alert(errorMessage);
+        });
     }
   },
   data() {

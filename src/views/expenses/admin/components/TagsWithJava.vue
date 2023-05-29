@@ -110,9 +110,10 @@
         .then(response => {
           console.log(response.data)
         })
-        .catch(function (error) { // 请求失败处理
-            console.log(error);
-          });
+        .catch(error => {
+          const errorMessage = error.response.data.error;
+          alert(errorMessage);
+        });
       }
     }
   }

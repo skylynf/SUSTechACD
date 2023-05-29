@@ -99,6 +99,10 @@ export default {
 
         console.log(this.tableData)
       })
+      .catch(error => {
+          const errorMessage = error.response.data.error;
+          alert(errorMessage);
+        });
     }
   },
   data() {

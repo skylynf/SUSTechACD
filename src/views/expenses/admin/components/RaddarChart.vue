@@ -136,6 +136,10 @@
           console.log(response.data);
           alert(response.data['message']);
         })
+        .catch(error => {
+          const errorMessage = error.response.data.error;
+          alert(errorMessage);
+        });
       },
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {

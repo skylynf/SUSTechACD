@@ -117,6 +117,10 @@
 
           console.log(this.tableData)
         })
+        .catch(error => {
+          const errorMessage = error.response.data.error;
+          alert(errorMessage);
+        });
       },
       outputChart() {
         var ID = this.$refs.queryexpenseID.value;
@@ -127,6 +131,10 @@
           // if(ID){
           // console.log(response.data['items'])
         })
+        .catch(error => {
+          const errorMessage = error.response.data.error;
+          alert(errorMessage);
+        });
       }
     },
 
