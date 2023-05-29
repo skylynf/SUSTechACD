@@ -465,6 +465,8 @@ def get_user_finish_performance_new():
 @cross_origin()
 def generate_time_list():
   week = {}
+  for i in range(10):
+    week[f"第{i}周"] = 0
   id_amount_dict = expense.set_index('expenseID')['amount'].to_dict()
   id_dict = expense.set_index('expenseID')['createDate'].to_dict()
   for expenseID in id_dict.keys():
