@@ -10,7 +10,7 @@ import adminDashboard from './admin'
 import editorDashboard from './editor'
 
 export default {
-  name: 'Answers',
+  name: 'Expenses',
   components: { adminDashboard, editorDashboard },
   data() {
     return {

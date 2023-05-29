@@ -54,12 +54,10 @@ export const constantRoutes = [
         path: 'display',
         component: () => import('@/views/charts/line.vue'),
         name: 'display',
-        meta: { title: '展示', icon: 'education', affix: true }
+        meta: { title: '展示', icon: 'education', affix: true}
       }
     ]
   },
-  expensesRouter,
-  fundsRouter,
   // {
   //   path: '/users',
   //   component: Layout,
@@ -227,6 +225,9 @@ export const asyncRoutes = [
   // chartsRouter,
   // nestedRouter,
   // tableRouter,
+
+  expensesRouter,
+  fundsRouter,
 
   // {
   //   path: '/example',

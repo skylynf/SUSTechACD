@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard-editor-container">
 
-    <panel-group @handleSetLineChartData="handleSetLineChartData" />
+    <panel-group @handleSetLineChartData="handleSetLineChartData"></panel-group>
 
     <!-- <el-row style="background:#fff;padding:16px 16px 32px;margin-bottom:32px;">
       <line-chart :chart-data="lineChartData" />
@@ -10,7 +10,7 @@
     <el-row>
       <el-col :xs="24" :sm="24" :lg="24">
         <div class="chart-wrapper">
-          <twj />
+          <tmu />
         </div>
       </el-col>
     </el-row>
@@ -18,35 +18,32 @@
 </template>
 
 <script>
-import PanelGroup from './components/PanelGroup'
-import LineChart from './components/LineChart'
-import RaddarChart from './components/RaddarChart'
-import twj from './components/TagsWithJava'
-import BarChart from './components/BarChart'
-import axios from 'axios'
 
-const lineChartData = {
-  answers_distribution: {
-    actualData: [1, 2, 3, 4, 5, 5, 6, 7]
-  }
-}
+  import tmu from '../../expenses/admin/components/qfund_admin.vue'
+  import axios from 'axios'
 
-export default {
-  name: 'DashboardAdmin',
-  components: {
-    twj
-  },
-  data() {
-    return {
-      lineChartData: null
+  const lineChartData = {
+    answers_distribution: {
+      actualData: [1, 2, 3, 4, 5, 5, 6, 7]
     }
-  },
-  mounted() {
-    this.fetchData()
-  },
-  methods: {
-    fetchData() {
-      axios.get('http://localhost:9090/AnswerDistribution')
+  }
+
+  export default {
+    name: 'DashboardAdmin',
+    components: {
+      tmu
+    },
+    data() {
+      return {
+        lineChartData: null
+      }
+    },
+    mounted() {
+      this.fetchData()
+    },
+    methods: {
+      fetchData() {
+        axios.get('http://localhost:9090/AnswerDistribution')
         .then(response => {
           lineChartData.answers_distribution.actualData[0] = response.data[0]
           lineChartData.answers_distribution.actualData[1] = response.data[1]
@@ -62,34 +59,34 @@ export default {
         .catch(errorAnswerDistribution => {
           console.log('ERROR in AnswerDistribution')
         })
+      }
     }
   }
-}
 </script>
 
 <style lang="scss" scoped>
-.dashboard-editor-container {
-  padding: 32px;
-  background-color: rgb(240, 242, 245);
-  position: relative;
+  .dashboard-editor-container {
+    padding: 32px;
+    background-color: rgb(240, 242, 245);
+    position: relative;
 
-  .github-corner {
-    position: absolute;
-    top: 0px;
-    border: 0;
-    right: 0;
+    .github-corner {
+      position: absolute;
+      top: 0px;
+      border: 0;
+      right: 0;
+    }
+
+    .chart-wrapper {
+      background: #fff;
+      padding: 16px 16px 0;
+      margin-bottom: 32px;
+    }
   }
 
-  .chart-wrapper {
-    background: #fff;
-    padding: 16px 16px 0;
-    margin-bottom: 32px;
+  @media (max-width:1024px) {
+    .chart-wrapper {
+      padding: 8px;
+    }
   }
-}
-
-@media (max-width:1024px) {
-  .chart-wrapper {
-    padding: 8px;
-  }
-}
 </style>

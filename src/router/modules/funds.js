@@ -15,19 +15,19 @@ const fundsRouter = {
       path: 'addFunds',
       component: () => import('@/views/funds/index'),
       name: 'addFunds',
-      meta: { title: '新增经费', noCache: true }
+      meta: { title: '新增经费', noCache: true ,  roles: ['admin']}
     },
     {
       path: 'queryFunds',
-      component: () => import('@/views/expenses/admin/queryfund.vue'),
+      component: () => import('@/views/funds/editor/queryfund.vue'),
       name: 'queryFunds',
-      meta: { title: '查询经费', noCache: true }
+      meta: { title: '查询经费', noCache: true ,  roles: ['admin','editor']}
     },
     {
       path: 'queryFunds_admin',
-      component: () => import('@/views/expenses/admin/queryfund_admin.vue'),
+      component: () => import('@/views/funds/admin/queryfund_admin.vue'),
       name: 'queryFunds_admin',
-      meta: { title: '查询经费使用情况', noCache: true }
+      meta: { title: '查询经费使用情况', noCache: true ,  roles: ['admin']}
     },
     // {
     //   path: 'deleteExpenses',

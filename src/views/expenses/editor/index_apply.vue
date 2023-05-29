@@ -7,10 +7,10 @@
       <line-chart :chart-data="lineChartData" />
     </el-row> -->
 
-    <el-row >
-      <el-col >
+    <el-row>
+      <el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper">
-          <raddar-chart />
+          <tmv />
         </div>
       </el-col>
     </el-row>
@@ -18,11 +18,11 @@
 </template>
 
 <script>
-import PanelGroup from './components/PanelGroup'
-import LineChart from './components/LineChart'
-import RaddarChart from './components/RaddarChart'
-import PieChart from './components/PieChart'
-import BarChart from './components/BarChart'
+import PanelGroup from '../admin/components/PanelGroup'
+import LineChart from '../admin/components/LineChart'
+import RaddarChart from '../admin/components/RaddarChart'
+import tmv from '../admin/components/TagsMostViews'
+import BarChart from '../admin/components/BarChart'
 import axios from 'axios'
 
 const lineChartData = {
@@ -34,8 +34,7 @@ const lineChartData = {
 export default {
   name: 'DashboardAdmin',
   components: {
-    // GithubCorner,
-    RaddarChart
+    tmv
   },
   data() {
     return {

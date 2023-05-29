@@ -1,16 +1,16 @@
 <template>
   <div class="dashboard-editor-container">
 
-    <panel-group @handleSetLineChartData="handleSetLineChartData"></panel-group>
+    <panel-group @handleSetLineChartData="handleSetLineChartData" />
 
     <!-- <el-row style="background:#fff;padding:16px 16px 32px;margin-bottom:32px;">
       <line-chart :chart-data="lineChartData" />
     </el-row> -->
 
-    <el-row>
-      <el-col :xs="24" :sm="24" :lg="24">
+    <el-row >
+      <el-col >
         <div class="chart-wrapper">
-          <tmu />
+          <raddar-chart />
         </div>
       </el-col>
     </el-row>
@@ -18,32 +18,36 @@
 </template>
 
 <script>
+import PanelGroup from '../admin/components/PanelGroup'
+import LineChart from '../admin/components/LineChart'
+import RaddarChart from '../admin/components/RaddarChart'
+import PieChart from '../admin/components/PieChart'
+import BarChart from '../admin/components/BarChart'
+import axios from 'axios'
 
-  import tmu from './components/qfund_admin.vue'
-  import axios from 'axios'
-
-  const lineChartData = {
-    answers_distribution: {
-      actualData: [1, 2, 3, 4, 5, 5, 6, 7]
-    }
+const lineChartData = {
+  answers_distribution: {
+    actualData: [1, 2, 3, 4, 5, 5, 6, 7]
   }
+}
 
-  export default {
-    name: 'DashboardAdmin',
-    components: {
-      tmu
-    },
-    data() {
-      return {
-        lineChartData: null
-      }
-    },
-    mounted() {
-      this.fetchData()
-    },
-    methods: {
-      fetchData() {
-        axios.get('http://localhost:9090/AnswerDistribution')
+export default {
+  name: 'DashboardAdmin',
+  components: {
+    // GithubCorner,
+    RaddarChart
+  },
+  data() {
+    return {
+      lineChartData: null
+    }
+  },
+  mounted() {
+    this.fetchData()
+  },
+  methods: {
+    fetchData() {
+      axios.get('http://localhost:9090/AnswerDistribution')
         .then(response => {
           lineChartData.answers_distribution.actualData[0] = response.data[0]
           lineChartData.answers_distribution.actualData[1] = response.data[1]
@@ -59,34 +63,34 @@
         .catch(errorAnswerDistribution => {
           console.log('ERROR in AnswerDistribution')
         })
-      }
     }
   }
+}
 </script>
 
 <style lang="scss" scoped>
-  .dashboard-editor-container {
-    padding: 32px;
-    background-color: rgb(240, 242, 245);
-    position: relative;
+.dashboard-editor-container {
+  padding: 32px;
+  background-color: rgb(240, 242, 245);
+  position: relative;
 
-    .github-corner {
-      position: absolute;
-      top: 0px;
-      border: 0;
-      right: 0;
-    }
-
-    .chart-wrapper {
-      background: #fff;
-      padding: 16px 16px 0;
-      margin-bottom: 32px;
-    }
+  .github-corner {
+    position: absolute;
+    top: 0px;
+    border: 0;
+    right: 0;
   }
 
-  @media (max-width:1024px) {
-    .chart-wrapper {
-      padding: 8px;
-    }
+  .chart-wrapper {
+    background: #fff;
+    padding: 16px 16px 0;
+    margin-bottom: 32px;
   }
+}
+
+@media (max-width:1024px) {
+  .chart-wrapper {
+    padding: 8px;
+  }
+}
 </style>

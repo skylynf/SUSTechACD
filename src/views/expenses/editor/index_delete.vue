@@ -8,9 +8,9 @@
     </el-row> -->
 
     <el-row>
-      <el-col :xs="24" :sm="24" :lg="24">
+      <el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper">
-          <tmu />
+          <pie-chart />
         </div>
       </el-col>
     </el-row>
@@ -18,11 +18,11 @@
 </template>
 
 <script>
-import PanelGroup from './components/PanelGroup'
-import LineChart from './components/LineChart'
-import RaddarChart from './components/RaddarChart'
-import tmu from './components/TagsMostUpvotes'
-import BarChart from './components/BarChart'
+import PanelGroup from '../admin/components/PanelGroup'
+import LineChart from '../admin/components/LineChart'
+import RaddarChart from '../admin/components/RaddarChart'
+import PieChart from '../admin/components/PieChart'
+import BarChart from '../admin/components/BarChart'
 import axios from 'axios'
 
 const lineChartData = {
@@ -34,7 +34,7 @@ const lineChartData = {
 export default {
   name: 'DashboardAdmin',
   components: {
-    tmu
+    PieChart
   },
   data() {
     return {
