@@ -46,14 +46,6 @@
     <el-form-item label="备注" prop="remark">
       <el-input type="textarea" v-model="ruleForm.remark"></el-input>
     </el-form-item>
-    <el-form-item label="申请状态" prop="applicationState">
-      <el-select v-model="ruleForm.applicationState" >
-        <el-option label="未发送" value="0"></el-option>
-        <el-option label="正在申请中" value="1"></el-option>
-        <el-option label="被拒绝打回" value="2"></el-option>
-        <el-option label="申请成功" value="3"></el-option>
-      </el-select>
-    </el-form-item>
     <el-form-item>
       <el-button type="primary" @click="onSubmit()">修改</el-button>
     </el-form-item>
@@ -105,9 +97,6 @@
             { required: true },
           ],
           remark: [
-            { required: true },
-          ],
-          applicationState: [
             { required: true },
           ]
         }
