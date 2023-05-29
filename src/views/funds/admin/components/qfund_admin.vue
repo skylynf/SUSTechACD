@@ -96,6 +96,7 @@
           });
 
           console.log(this.tableData)
+          alert('查询成功！');
         })
         .catch(error => {
           const errorMessage = error.response.data.error;

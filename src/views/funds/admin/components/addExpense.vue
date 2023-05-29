@@ -77,6 +77,7 @@
         axios.post(url, this.ruleForm)
         .then(response => {
           console.log(response.data)
+          alert('增加成功！');
         })
         .catch(error => {
           const errorMessage = error.response.data.error;

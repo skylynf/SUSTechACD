@@ -113,6 +113,7 @@
 
             console.log(tuple.fundID)
             this.tableData.push(tuple);
+            alert('查询成功！');
           });
 
           console.log(this.tableData)
