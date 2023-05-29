@@ -79,7 +79,9 @@ def get_user_finish_performance_excel():
           lst_expense_amount += [0] * (12 - len(lst_expense_amount))
 
           l = list(select[select['fundID'] == _].iloc[0])
-          duo.loc[len(duo)] = [count] + l[:2] + [l[3]] + lst_expense_amount + [sum_lea, l[3] - sum_lea, str('%.2f' % (sum_lea / l[3] * 100)) + '%', '是' if sum_lea / l[3] > 0.6 else '否']
+          duo.loc[len(duo)] = [count] + l[:2] + [l[3]] + lst_expense_amount +\
+                              [sum_lea, float(l[3]) - sum_lea, str('%.2f' % (sum_lea / float(l[3]) * 100)) +
+                               '%', '是' if sum_lea / l[3] > 0.6 else '否']
 
         zonge = sum(duo['经费总额'])
         yue = sum(duo['经费余额'])
@@ -91,11 +93,12 @@ def get_user_finish_performance_excel():
 
         return send_from_directory(os.getcwd(), '多项经费使用一览表.xlsx', as_attachment=True)
       else:
-        return jsonify({'message': "This user doesn't have any fund."}), 404
+        return jsonify({'message': "该用户无经费"}), 404
 # API 2. 查询若干个fundID的使用情况和执行率：
 @app.route('/api/funds/<fundIDs>/', methods=['GET'])
 @cross_origin()
 def get_fund_finish_performance(fundIDs):
+      print(fundIDs)
       fundID_lst = fundIDs.split(",")
       items = []
       for _ in fundID_lst:
@@ -114,7 +117,7 @@ def get_expense_by_id(expenseID):
       if len(select):
         return jsonify(select.to_dict()), 200
       else:
-        return jsonify({'error': f'Expense with expenseID {expenseID} not found.'}), 404
+        return jsonify({'error': f'未找到支出{expenseID}'}), 404
 
 
 # API 2. 查询待审批的所有支出列表：
@@ -125,7 +128,7 @@ def get_pending_expense():
       if len(select):
         return jsonify([select.iloc[_].to_dict() for _ in range(len(select))]), 200
       else:
-        return jsonify({'message': "There is no pending expense."}), 200
+        return jsonify({'message': "无待审批支出"}), 200
 
 
 # API 3. 增加一个经费：
@@ -144,8 +147,13 @@ def add_fund():
 
       if userName not in user['userName'].values:
           print('error success')
-          return jsonify({'error': f'User {userName} not found.'}), 404
+          return jsonify({'error': f'未找到用户{userName}.'}), 404
       userID = int(user[user['userName'] == userName]['userID'].values[0])
+
+      #if totalquota less than usedquota
+      if totalQuota < usedQuota:
+          print('error success')
+          return jsonify({'error': f'已支出预算超过总预算'}), 404
 
       new_fund = {
           'fundID': fundID,
@@ -163,7 +171,7 @@ def add_fund():
 
       if fundID in fund['fundID'].values:
           print('error success')
-          return jsonify({'error': f'Duplicated fundID {fundID}.'}), 404
+          return jsonify({'error': f'重复经费号{fundID}.'}), 404
 
 
       fund.loc[len(fund)] = new_fund
@@ -180,9 +188,9 @@ def delete_fund(fundID):
         fund.drop(fund[fund['fundID'] == fundID].index, inplace=True)
         fund.reset_index(drop=True, inplace=True)
         fund.to_csv('fund.csv', index=False)
-        return jsonify({'message': f'Fund with fundID {fundID} deleted successfully.'}), 200
+        return jsonify({'message': f'经费删除成功'}), 200
     else:
-        return jsonify({'error': f'Fund with fundID {fundID} not found.'}), 404
+        return jsonify({'error': f'未找到相关经费'}), 404
 
 
 # 增加支出
@@ -194,12 +202,14 @@ def add_expense():
     expenseID = int(request.json.get('expenseID'))
     if expenseID in expense['expenseID'].values:
       print('error success')
-      return jsonify({'error': f'Duplicated expenseID {expenseID}.'}), 404
+      return jsonify({'error': f'重复支出号 {expenseID}.'}), 404
     expenseName = request.json.get('expenseName')
     fundID = int(request.json.get('fundID'))
+    if fundID not in fund['fundID'].values:
+      return jsonify({'error': f'不存在的经费号{fundID}.'}), 404
     fundIDs = fund.loc[fund['userID'] == currentUser, 'fundID'].unique().tolist()
     if fundID not in fundIDs:
-      return jsonify({'error': f'Wrong fundID {fundID}.'}), 404
+      return jsonify({'error': f'非本人经费号{fundID}.'}), 404
     amount = float(request.json.get('amount'))
     operator = request.json.get('operator')
     category1 = request.json.get('category1')
@@ -226,7 +236,7 @@ def add_expense():
     totalQuota = filtered_df['totalQuota'].values[0]
     usedQuota = filtered_df['usedQuota'].values[0]
     if float(usedQuota) + amount > float(totalQuota):
-      return jsonify({'error': f'expense exceed total quota.'}), 405
+      return jsonify({'error': f'预加支出超过经费总额'}), 405
     usedQuota = float(usedQuota) + amount
     mask = fund['fundID'] == fundID
     fund.loc[mask, 'usedQuota'] = usedQuota
@@ -248,10 +258,10 @@ def delete_expense(expenseID):
         expense.drop(expense[expense['expenseID'] == expenseID].index, inplace=True)
         expense.reset_index(drop=True, inplace=True)
         expense.to_csv('expense.csv', index=False)
-        return jsonify({'message': f'Expense with expenseID {expenseID} deleted successfully.'}), 200
+        return jsonify({'message': f'支出删除成功'}), 200
     else:
         print("delete failed")
-        return jsonify({'error': f'Expense with expenseID {expenseID} not found.'}), 404
+        return jsonify({'error': f'未知支出 {expenseID}'}), 404
 
 #送审支出
 @app.route('/api/expenses/submit/<int:expenseID>', methods=['POST'])
@@ -262,9 +272,9 @@ def submit_expense(expenseID):
     expense.to_csv('expense.csv', index=False)
     print("expense submit successfully")
     # 返回成功更新的响应
-    return jsonify({'message': 'Expense submit successfully'}), 200
+    return jsonify({'message': '送审成功'}), 200
   else:
-    return jsonify({'error': f'Expense with expenseID {expenseID} not found.'}), 404
+    return jsonify({'error': f'未知支出 {expenseID}'}), 404
 
 
 
@@ -278,9 +288,11 @@ def modify_expense(expenseID):
     if expenseID in expense['expenseID'].values:
       expenseName = request.json.get('expenseName')
       fundID = int(request.json.get('fundID'))
+      if fundID not in fund['fundID'].values:
+        return jsonify({'error': f'未知经费号'}), 404
       fundIDs = fund.loc[fund['userID'] == currentUser, 'fundID'].unique().tolist()
       if fundID not in fundIDs:
-        return jsonify({'error': f'Wrong fundID {fundID}.'}), 404
+        return jsonify({'error': f'不是本人经费'}), 404
       amount = float(request.json.get('amount'))
       operator = request.json.get('operator')
       category1 = request.json.get('category1')
@@ -309,7 +321,7 @@ def modify_expense(expenseID):
       totalQuota = filtered_df['totalQuota'].values[0]
       usedQuota = filtered_df['usedQuota'].values[0]
       if float(usedQuota) + amount - float(old_amount) > float(totalQuota):
-        return jsonify({'error': f'expense exceed total quota.'}), 404
+        return jsonify({'error': f'预加支出超过经费总额'}), 404
       usedQuota = float(usedQuota) + amount - float(old_amount)
       mask = fund['fundID'] == fundID
       fund.loc[mask, 'usedQuota'] = usedQuota
@@ -319,7 +331,7 @@ def modify_expense(expenseID):
       fund.to_csv('fund.csv', index=False)
       return jsonify(new_expense), 200
     else:
-      return jsonify({'error': f'Expense with expenseID {expenseID} not found.'}), 404
+      return jsonify({'error': f'未找到支出'}), 404
 
 #添加用户
 @app.route('/api/user/add', methods=['POST'])
@@ -493,6 +505,7 @@ def get_user_finish_performance_new():
           fund_dic = user_funds.iloc[row].to_dict()
           for i in range(len(amounts)):
             fund_dic[f'amount{i}'] = amounts[i]
+          fund_dic['userid'] = users.loc[users['userID'] == user_funds.iloc[row]['userID'], 'userName'].values[0]
           items.append(fund_dic)
         print(json.dumps(items))
         return json.dumps(items), 200
