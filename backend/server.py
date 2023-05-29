@@ -100,7 +100,8 @@ def get_fund_finish_performance(fundIDs):
       for _ in fundID_lst:
         fundID = int(_)
         select = fund[fund['fundID'] == fundID]
-        items.append(select.iloc[0].to_dict() if len(select) else {'error': f'Fund with fundID {fundID} not found.'})
+        if len(select):
+          items.append(select.iloc[0].to_dict())
       return jsonify({'items': items}), 200
 
 
