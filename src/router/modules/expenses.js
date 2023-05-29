@@ -13,37 +13,37 @@ const expensesRouter = {
   children: [
     {
       path: 'searchExpenses',
-      component: () => import('@/views/answers/admin/index_search.vue'),
+      component: () => import('@/views/expenses/admin/index_search.vue'),
       name: 'searchExpenses',
       meta: { title: '查询支出', noCache: true }
     },
     {
       path: 'addExpenses',
-      component: () => import('@/views/answers/admin/index_add.vue'),
+      component: () => import('@/views/expenses/admin/index_add.vue'),
       name: 'addExpenses',
       meta: { title: '增加支出', noCache: true }
     },
     {
       path: 'deleteExpenses',
-      component: () => import('@/views/answers/admin/index_delete.vue'),
+      component: () => import('@/views/expenses/admin/index_delete.vue'),
       name: 'deleteExpenses',
       meta: { title: '删除支出', noCache: true }
     },
     {
       path: 'applyExpenses',
-      component: () => import('@/views/answers/admin/index_apply.vue'),
+      component: () => import('@/views/expenses/admin/index_apply.vue'),
       name: 'applyExpenses',
       meta: { title: '送审支出', noCache: true }
     },
     {
       path: 'modifyExpenses',
-      component: () => import('@/views/answers/admin/index_modify.vue'),
+      component: () => import('@/views/expenses/admin/index_modify.vue'),
       name: 'modifyExpenses',
       meta: { title: '修改支出', noCache: true }
     },
 {
   path: 'searchExpensesAdmin',
-    component: () => import('@/views/answers/admin/index_search_admin.vue'),
+    component: () => import('@/views/expenses/admin/index_search_admin.vue'),
   name: 'searchExpensesAdmin',
   meta: { title: '查询未审批支出', noCache: true }
 },
