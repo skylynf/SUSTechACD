@@ -20,7 +20,7 @@ print(result)
 
 currentUser = '1'
 # API 1. 获取课题组全部经费完成情况（支出情况）：
-@app.route('/api/users/<int:userID>/funds', methods=['GET'])
+@app.route('/api/users/<userID>/funds', methods=['GET'])
 @cross_origin()
 def get_user_finish_performance(userID):
       select = fund[fund['userID'] == userID]
@@ -35,7 +35,7 @@ def get_user_finish_performance(userID):
 
 
 # API 1. 获取课题组全部经费完成情况（支出情况）Excel文件：
-@app.route('/api/users/<int:userID>/funds/excel', methods=['GET'])
+@app.route('/api/users/<userID>/funds/excel', methods=['GET'])
 @cross_origin()
 def get_user_finish_performance_excel(userID):
       select = fund[fund['userID'] == userID]
