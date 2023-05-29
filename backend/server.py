@@ -1,3 +1,5 @@
+import time
+
 import numpy as np
 from flask import Flask, request, jsonify, json, send_from_directory
 from flask_cors import CORS, cross_origin
@@ -119,11 +121,11 @@ def get_pending_expense():
 def add_fund():
       fundID = int(request.json.get('fundID'))
       fundName = request.json.get('fundName')  # request.form.get
-      userID = request.json.get('userID')
+      userID = int(request.json.get('userID'))
       totalQuota = request.json.get('totalQuota')
       usedQuota = request.json.get('usedQuota')
-      abstract = request.json.get('abstract')
-      remark = request.json.get('remark')
+      abstract = request.json.get('usedQuota')
+      remark = request.json.get('usedQuota')
 
       new_fund = {
           'fundID': fundID,
@@ -253,16 +255,14 @@ def modify_expense(expenseID):
       expenseName = request.json.get('expenseName')
       fundID = int(request.json.get('fundID'))
       if fundID not in fund['fundID'].values:
-        print(fundID)
         return jsonify({'error': f'Unkowen fundID {expenseID}.'}), 404
-      print(fundID)
       amount = float(request.json.get('amount'))
       operator = request.json.get('operator')
       category1 = request.json.get('category1')
       category2 = request.json.get('category2')
       abstract = request.json.get('abstract')
       remark = request.json.get('remark')
-      applicationState = int(request.json.get('applicationState'))
+      applicationState = 0
       # 创建新支出信息
       new_expense = {
           'expenseID': expenseID,
@@ -393,17 +393,18 @@ def examineUser():
 @app.route('/api/users/<int:expenseID>/accept', methods=['POST'])
 @cross_origin()
 def accept_pending(expenseID):
-  if expenseID in expense['expenseID'].values:
+  if expenseID in expense['expenseID'].values():
     expense.loc[expense['expenseID'] == expenseID, 'applicationState'] = 3
+    expense.to_csv('expense.csv', index=False)
     return jsonify('accept successfully'), 200
-
   return jsonify({'error': f'Unknown expenseID'}), 404
 
 @app.route('/api/users/<int:expenseID>/reject', methods=['POST'])
 @cross_origin()
 def reject_pending(expenseID):
-  if expenseID in expense['expenseID'].values:
+  if expenseID in expense['expenseID'].values():
     expense.loc[expense['expenseID'] == expenseID, 'applicationState'] = 2
+    expense.to_csv('expense.csv', index=False)
     return jsonify('reject successfully'), 200
 
 @app.route('/api/expenses/findAll', methods=['GET'])
