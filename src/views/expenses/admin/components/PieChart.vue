@@ -28,6 +28,7 @@
 
         axios.delete(url).then(response => {
            console.log(response.data)
+           alert('删除成功！');
         })
         .catch(error => {
           const errorMessage = error.response.data.error;

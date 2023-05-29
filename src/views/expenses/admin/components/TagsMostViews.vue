@@ -30,6 +30,9 @@
            console.log(response.data);
            alert(response.data['message']);
         })
+        .then(res => {
+          alert('送审成功！');
+        })
         .catch(error => {
           const errorMessage = error.response.data.error;
           alert(errorMessage);

@@ -77,7 +77,11 @@ export default {
     approve(e){
       var url='http://127.0.0.1:5000/api/users/'+e.expenseID+'/accept';
       console.log((e.expenseID))
-      axios.post(url).catch(error => {
+      axios.post(url)
+      .then(res => {
+        alert('批准成功！');
+      })
+      .catch(error => {
           const errorMessage = error.response.data.error;
           alert(errorMessage);
         });
@@ -85,7 +89,11 @@ export default {
     reject(e){
       var url='http://127.0.0.1:5000/api/users/'+e.expenseID+'/reject';
       console.log((e.expenseID))
-      axios.post(url).catch(error => {
+      axios.post(url)
+      .then(res => {
+        alert('拒绝成功！');
+      })
+      .catch(error => {
           const errorMessage = error.response.data.error;
           alert(errorMessage);
         });
@@ -126,6 +134,7 @@ export default {
         });
 
         console.log(this.tableData)
+        alert('查询成功！');
       })
       .catch(error => {
           const errorMessage = error.response.data.error;

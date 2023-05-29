@@ -96,7 +96,7 @@ export default {
           console.log(tuple.expenseID)
           this.tableData.push(tuple);
         });
-
+        alert('查询成功！');
         console.log(this.tableData)
       })
       .catch(error => {
