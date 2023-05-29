@@ -25,10 +25,14 @@ currentUser = '1'
 def get_user_finish_performance(userID):
       select = fund[fund['userID'] == userID]
       if len(select):
-        items = [{
-            "expenses": expense[expense['fundID'] == select.iloc[_]['fundID']].to_json(),
-            "fund": select.iloc[_].to_json()
-            } for _ in range(len(select))]
+        items = []
+        for _ in range(len(select)):
+          select2 = expense[expense['fundID'] == select.iloc[_]['fundID']]
+          item = {
+            "expenses": [select2.iloc[_].to_dict() for _ in range(len(select2))],
+            "fund": select.iloc[_].to_dict()
+          }
+          items.append(item)
         return jsonify({'items': items}), 200
       else:
         return jsonify({'message': "This user doesn't have any fund."}), 200
@@ -74,7 +78,7 @@ def get_fund_finish_performance(fundIDs):
       for _ in fundID_lst:
         fundID = int(_)
         select = fund[fund['fundID'] == fundID]
-        items.append(select.to_json() if len(select) else {'error': f'Fund with fundID {fundID} not found.'})
+        items.append(select.iloc[0].to_dict() if len(select) else {'error': f'Fund with fundID {fundID} not found.'})
       return jsonify({'items': items}), 200
 
 
@@ -84,7 +88,7 @@ def get_fund_finish_performance(fundIDs):
 def get_expense_by_id(expenseID):
       select = expense.loc[expense['expenseID'] == expenseID].iloc[0]
       if len(select):
-        return jsonify(select.to_json()), 200
+        return jsonify(select.to_dict()), 200
       else:
         return jsonify({'error': f'Expense with expenseID {expenseID} not found.'}), 404
 
