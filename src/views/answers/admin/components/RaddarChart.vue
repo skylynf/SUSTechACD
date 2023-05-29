@@ -1,38 +1,63 @@
 <template>
-  <el-form ref="form" :model="form" label-width="180px">
-    <div style="margin: 20px;">增加支出</div>
-    <el-form-item label="支出编号">
-      <el-input v-model="form.expenseID"></el-input>
+  <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+    <el-form-item label="支出编号" prop="expenseID">
+      <el-input v-model="ruleForm.expenseID"></el-input>
     </el-form-item>
-    <el-form-item label="支出名称">
-      <el-input v-model="form.expenseName"></el-input>
+    <el-form-item label="支出名称" prop="expenseName">
+      <el-input v-model="ruleForm.expenseName"></el-input>
     </el-form-item>
-    <el-form-item label="该支出对应的经费号">
-      <el-input v-model="form.fundID"></el-input>
+    <el-form-item label="经费号" prop="fundID">
+      <el-input v-model="ruleForm.fundID"></el-input>
     </el-form-item>
-    <el-form-item label="支出额度">
-      <el-input v-model="form.amount"></el-input>
+    <el-form-item label="支出额度" prop="amount">
+      <el-input v-model="ruleForm.amount"></el-input>
     </el-form-item>
-    <el-form-item label="经办人">
-      <el-input v-model="form.operator"></el-input>
+    <el-form-item label="经办人" prop="userID">
+      <el-input v-model="ruleForm.userID"></el-input>
     </el-form-item>
-    <el-form-item label="支出类别一级">
-      <el-input v-model="form.category1"></el-input>
+    <el-form-item label="支出类别一级" prop="category1">
+      <el-select v-model="ruleForm.category1" >
+        <el-option label="办公费" value="办公费"></el-option>
+        <el-option label="办公设备配置" value="办公设备配置"></el-option>
+        <el-option label="差旅费" value="差旅费"></el-option>
+        <el-option label="电费" value="电费"></el-option>
+        <el-option label="工会经费" value="工会经费"></el-option>
+        <el-option label="会议费" value="会议费"></el-option>
+        <el-option label="奖励金" value="奖励金"></el-option>
+        <el-option label="劳务费" value="劳务费"></el-option>
+      </el-select>
     </el-form-item>
-    <el-form-item label="支出类别二级">
-      <el-input v-model="form.category2"></el-input>
+    <el-form-item label="支出类别二级" prop="category2">
+      <el-select v-model="ruleForm.category2" >
+        <el-option label="培训费" value="培训费"></el-option>
+        <el-option label="其他" value="其他"></el-option>
+        <el-option label="其他交通费用" value="其他交通费用"></el-option>
+        <el-option label="其他资本性支出" value="其他资本性支出"></el-option>
+        <el-option label="水费" value="水费"></el-option>
+        <el-option label="维修（护）费" value="维修（护）费"></el-option>
+        <el-option label="委托业务" value="委托业务"></el-option>
+        <el-option label="无形资产" value="无形资产"></el-option>
+        <el-option label="信息网络构建" value="信息网络构建"></el-option>
+      </el-select>
     </el-form-item>
-    <el-form-item label="内容摘要">
-      <el-input v-model="form.abstract"></el-input>
+    <el-form-item label="摘要" prop="abstract">
+      <el-input type="textarea" v-model="ruleForm.abstract"></el-input>
     </el-form-item>
-    <el-form-item label="备注">
-      <el-input v-model="form.remark"></el-input>
+    <el-form-item label="备注" prop="remark">
+      <el-input type="textarea" v-model="ruleForm.remark"></el-input>
     </el-form-item>
-    <el-form-item label="申请状态">
-      <el-input v-model="form.applicationState"></el-input>
+    <el-form-item label="申请状态" prop="applicationState">
+      <el-select v-model="ruleForm.applicationState" >
+        <el-option label="未发送" value="0"></el-option>
+        <el-option label="正在申请中" value="1"></el-option>
+        <el-option label="被拒绝打回" value="2"></el-option>
+        <el-option label="申请成功" value="3"></el-option>
+      </el-select>
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" @click="onSubmit">立即创建</el-button>
+      <el-button type="primary" @click="onSubmit()">增加</el-button>
+      <el-button @click="resetForm('ruleForm')">重置</el-button>
+      <el-button type="primary" @click="add()">送审</el-button>
     </el-form-item>
   </el-form>
 </template>
@@ -46,7 +71,7 @@
   export default {
     data() {
       return {
-        form: {
+        ruleForm: {
           expenseID: '',
           expenseName: '',
           fundID: '',
@@ -57,19 +82,72 @@
           abstract: '',
           remark: '',
           applicationState: ''
+        },
+        rules: {
+          expenseID: [
+            { required: true },
+          ],
+          expenseName: [
+            { required: true },
+          ],
+          fundID: [
+            { required: true },
+          ],
+          amount: [
+            { required: true },
+          ],
+          userID: [
+            { required: true },
+          ],
+          category1: [
+            { required: true },
+          ],
+          category2: [
+            { required: true },
+          ],
+          abstract: [
+            { required: true },
+          ],
+          remark: [
+            { required: true },
+          ],
+          applicationState: [
+            { required: true },
+          ]
         }
       }
     },
     methods: {
       onSubmit() {
         console.log('submit!');
-        axios.post(url, this.form)
+        axios.post(url, this.ruleForm)
         .then(response => {
           console.log(response.data)
         })
         .catch(function (error) { // 请求失败处理
             console.log(error);
           });
+      },
+      add() {
+        var id=this.ruleForm.expenseID;
+        var u='http://127.0.0.1:5000/api/expenses/submit/'+id;
+        axios.post(u).then(response => {
+          console.log(response.data);
+          alert(response.data['message']);
+        })
+      },
+      submitForm(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            alert('submit!');
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
+      },
+      resetForm(formName) {
+        this.$refs[formName].resetFields();
       }
     }
   }
