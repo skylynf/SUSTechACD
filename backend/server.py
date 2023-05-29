@@ -393,7 +393,7 @@ def examineUser():
 @app.route('/api/users/<int:expenseID>/accept', methods=['POST'])
 @cross_origin()
 def accept_pending(expenseID):
-  if expenseID in expense['expenseID'].values():
+  if expenseID in expense['expenseID'].values:
     expense.loc[expense['expenseID'] == expenseID, 'applicationState'] = 3
     return jsonify('accept successfully'), 200
 
@@ -402,7 +402,7 @@ def accept_pending(expenseID):
 @app.route('/api/users/<int:expenseID>/reject', methods=['POST'])
 @cross_origin()
 def reject_pending(expenseID):
-  if expenseID in expense['expenseID'].values():
+  if expenseID in expense['expenseID'].values:
     expense.loc[expense['expenseID'] == expenseID, 'applicationState'] = 2
     return jsonify('reject successfully'), 200
 
