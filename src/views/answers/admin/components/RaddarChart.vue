@@ -1,5 +1,5 @@
 <template>
-  <el-form ref="form" :model="form" label-width="80px">
+  <el-form ref="form" :model="form" label-width="180px">
     <div style="margin: 20px;">增加支出</div>
     <el-form-item label="支出编号">
       <el-input v-model="form.expenseID"></el-input>

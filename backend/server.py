@@ -20,7 +20,7 @@ print(result)
 
 currentUser = '1'
 # API 1. 获取课题组全部经费完成情况（支出情况）：
-@app.route('/api/users/<int:userID>/funds', methods=['GET'])  
+@app.route('/api/users/<int:userID>/funds', methods=['GET'])
 @cross_origin()
 def get_user_finish_performance(userID):
       select = fund[fund['userID'] == userID]
@@ -187,7 +187,7 @@ def add_expense():
     totalQuota = filtered_df['totalQuota'].values[0]
     usedQuota = filtered_df['usedQuota'].values[0]
     if float(usedQuota) + amount > float(totalQuota):
-      return jsonify({'error': f'expense exceed total quota.'}), 404
+      return jsonify({'error': f'expense exceed total quota.'}), 405
     usedQuota = float(usedQuota) + amount
     mask = fund['fundID'] == fundID
     fund.loc[mask, 'usedQuota'] = usedQuota
@@ -365,10 +365,12 @@ def export_user_fund():
 @cross_origin()
 def examineUser():
   global currentUser
-  userID = request.args.get('username')
+  username = request.args.get('username')
   passwd = int(request.args.get('passwd'))
-  if userID in users['userID'].values:
-      if passwd == users.loc[users['userID'] == userID, 'password'].values[0]:
+
+  if username in users['userName'].values:
+      if passwd == users.loc[users['userName'] == username, 'password'].values[0]:
+        userID = users.loc[users['userName'] == username, 'userID'].values[0]
         currentUser = userID
         return jsonify(1), 200
   return jsonify(0), 200
@@ -396,5 +398,7 @@ def find_all_expenses():
   result = expense[expense['fundID'].isin(result)]
   print(result.to_json(orient='records'))
   return result.to_json(orient='records'), 200
+
+
 if __name__ == '__main__':
     app.run(debug=True)

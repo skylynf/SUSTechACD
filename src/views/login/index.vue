@@ -74,6 +74,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 import { validUsername } from '@/utils/validate'
 import SocialSign from './components/SocialSignin'
 
@@ -83,7 +85,8 @@ export default {
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!validUsername(value)) {
-        callback(new Error('Please enter the correct user name'))
+        //callback(new Error('Please enter the correct user name'))
+        callback()
       } else {
         callback()
       }
@@ -155,21 +158,72 @@ export default {
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
-          this.loading = true
-          this.$store.dispatch('user/login', this.loginForm)
-            .then(() => {
-              this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
-              this.loading = false
-            })
-            .catch(() => {
-              this.loading = false
-            })
+          const { username, password } = this.loginForm;
+          this.loading = true;
+
+          if (username === 'admin') {
+            const url = `http://127.0.0.1:5000/api/users/login?username=${username}&passwd=${password}`;
+            axios.get(url)
+              .then(response => {
+                const result = response.data; // 假设返回值为 1 或 0
+
+                if (result === 1) {
+                  // 允许登录，将用户名改为 editor 并进行正常登录流程
+                  this.loginForm.username = 'admin';
+                  this.$store.dispatch('user/login', this.loginForm)
+                    .then(() => {
+                      this.$router.push({ path: this.redirect || '/', query: this.otherQuery });
+                      this.loading = false;
+                    })
+                    .catch(() => {
+                      this.loading = false;
+                    });
+                } else {
+                  // 不允许登录
+                  console.log('登录失败');
+                  alert('登录失败');
+                  alert(result);
+                  this.loading = false;
+                }
+              })
+          } else {
+            // 发起登录请求并根据返回值处理登录
+            const url = `http://127.0.0.1:5000/api/users/login?username=${username}&passwd=${password}`;
+            axios.get(url)
+              .then(response => {
+                const result = response.data; // 假设返回值为 1 或 0
+
+                if (result === 1) {
+                  // 允许登录，将用户名改为 editor 并进行正常登录流程
+                  this.loginForm.username = 'editor';
+                  this.$store.dispatch('user/login', this.loginForm)
+                    .then(() => {
+                      this.$router.push({ path: this.redirect || '/', query: this.otherQuery });
+                      this.loading = false;
+                    })
+                    .catch(() => {
+                      this.loading = false;
+                    });
+                } else {
+                  // 不允许登录
+                  console.log('登录失败');
+                  alert('登录失败');
+                  alert(result);
+                  this.loading = false;
+                }
+              })
+              .catch(() => {
+                console.log('登录请求失败');
+                this.loading = false;
+              });
+          }
         } else {
-          console.log('error submit!!')
-          return false
+          console.log('表单校验失败');
+          return false;
         }
-      })
+      });
     },
+
     getOtherQuery(query) {
       return Object.keys(query).reduce((acc, cur) => {
         if (cur !== 'redirect') {

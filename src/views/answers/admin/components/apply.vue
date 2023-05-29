@@ -8,7 +8,7 @@
       </div>
     </div>
     <!--经费编号	经费名称	课题组	经办人	支出类别一级	支出类别二级	内容摘要	支出金额（元）-->
-
+    
   </div>
 </template>
 
@@ -25,7 +25,7 @@
         var ID=this.$refs.queryexpenseID.value;
         // var ID='1827328'
         var url='http://127.0.0.1:5000/api/expenses/delete/'+ID;
-
+        
         axios.delete(url).then(response => {
            console.log(response.data)
         })

@@ -8,13 +8,14 @@ import Layout from '@/layout'
 
 /* Router Modules */
 // import componentsRouter from './modules/components'
-import chartsRouter from './modules/charts'
+// import chartsRouter from './modules/charts'
 // import relationRouter from './modules/relations'
-import tableRouter from './modules/table'
+// import tableRouter from './modules/table'
 // import nestedRouter from './modules/nested'
 import frequentRouter from './modules/frequent-apis'
 import tagRouter from './modules/tags'
 import relationRouter from './modules/relations'
+import expensesRouter from "@/router/modules/expenses";
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -43,29 +44,17 @@ import relationRouter from './modules/relations'
  * all roles can be accessed
  */
 export const constantRoutes = [
+  expensesRouter,
   {
     path: '/',
     component: Layout,
-    redirect: '/answers',
+    redirect: '/funds',
     children: [
       {
-        path: 'answers',
-        component: () => import('@/views/answers/index'),
-        name: 'Answers',
-        meta: { title: 'Answers', icon: 'message', affix: true }
-      }
-    ]
-  },
-  {
-    path: '/acceptedAnswers',
-    component: Layout,
-    redirect: '/acceptedAnswers',
-    children: [
-      {
-        path: 'acceptedAnswers',
+        path: 'funds',
         component: () => import('@/views/accepted-answers/index'),
-        name: 'AcceptedAnswers',
-        meta: { title: 'AcceptedAnswers', icon: 'education', affix: true }
+        name: 'funds',
+        meta: { title: '经费', icon: 'education', affix: true }
       }
     ]
   },
