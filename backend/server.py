@@ -20,7 +20,7 @@ print(result)
 items = []
 user_funds = fund[fund['userID'] == '1']
 print(expense.to_json(orient='records'))
-currentUser = '1'
+currentUser = 1
 initialTime = time.mktime((2023, 5, 1, 10, 30, 0, 0, 0, 0))
 week = {}
 id_amount_dict = expense.set_index('expenseID')['amount'].to_dict()
@@ -180,8 +180,9 @@ def add_expense():
       return jsonify({'error': f'Duplicated expenseID {expenseID}.'}), 404
     expenseName = request.json.get('expenseName')
     fundID = int(request.json.get('fundID'))
-    if fundID not in fund['fundID'].values:
-      return jsonify({'error': f'Unkowen fundID {fundID}.'}), 404
+    fundIDs = fund.loc[fund['userID'] == currentUser, 'fundID'].unique().tolist()
+    if fundID not in fundIDs:
+      return jsonify({'error': f'Wrong fundID {fundID}.'}), 404
     amount = float(request.json.get('amount'))
     operator = request.json.get('operator')
     category1 = request.json.get('category1')
