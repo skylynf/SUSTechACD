@@ -23,6 +23,19 @@ items = []
 user_funds = fund[fund['userID'] == '1']
 print(expense.to_json(orient='records'))
 currentUser = '1'
+initialTime = time.mktime((2023, 5, 1, 10, 30, 0, 0, 0, 0))
+week = {}
+id_amount_dict = expense.set_index('expenseID')['amount'].to_dict()
+id_dict = expense.set_index('expenseID')['createDate'].to_dict()
+print(id_dict)
+for expenseID in id_dict.keys():
+  dateWeek = int((id_dict[expenseID] - initialTime) / 60 / 60 / 24 / 7)
+  dateWeek = f"第{dateWeek}周"
+  if dateWeek in week.keys():
+    week[dateWeek] = week[dateWeek] + id_amount_dict[expenseID]
+  else:
+    week[dateWeek] = id_amount_dict[expenseID]
+print(json.dumps(week))
 # API 1. 获取课题组全部经费完成情况（支出情况）：
 # @app.route('/api/users/<userID>/funds', methods=['GET'])
 # @cross_origin()
@@ -188,7 +201,8 @@ def add_expense():
         'category2': category2,
         'abstract': abstract,
         'remark': remark,
-        'applicationState': applicationState
+        'applicationState': applicationState,
+        'createDate' : time.time()
     }
     filtered_df = fund[fund['fundID'] == fundID]
     # 获取 totalQuota 和 usedQuota 列的值
@@ -267,7 +281,8 @@ def modify_expense(expenseID):
           'category2': category2,
           'abstract': abstract,
           'remark': remark,
-          'applicationState': applicationState
+          'applicationState': applicationState,
+          'createDate' : time.time()
       }
       # 将新支出信息添加到列表中
       filtered_df = expense[expense['expenseID'] == expenseID]
@@ -442,10 +457,19 @@ def get_user_finish_performance_new(userID):
       else:
         return jsonify({'message': "This user doesn't have any fund."}), 404
 
+@app.route('/api/chart', methods=['GET'])
+@cross_origin()
 def generate_time_list():
-  week = []
+  week = {}
   id_amount_dict = expense.set_index('expenseID')['amount'].to_dict()
-  id__dict = expense.set_index('expenseID')['amount'].to_dict()
-
+  id_dict = expense.set_index('expenseID')['createDate'].to_dict()
+  for expenseID in id_dict.keys():
+    dateWeek = int((id_dict[expenseID] - initialTime) / 60 / 60 / 24 / 7)
+    dateWeek = f"第{dateWeek}周"
+    if dateWeek in week.keys():
+      week[dateWeek] = week[dateWeek] + id_amount_dict[expenseID]
+    else:
+      week[dateWeek] = id_amount_dict[expenseID]
+  return json.dumps(week)
 if __name__ == '__main__':
     app.run(debug=True)
