@@ -3,7 +3,7 @@
     <div class="filter-container">
       <div style="margin:0 0 5px 20px">
         <div style="margin: 20px;">送审支出（ExpenseID）</div>
-        <input type="text"  ref="expenseID">
+        <input type="text" placeholder="expenseID"  ref="expenseID">
         <el-button type=“button” @click="changeChart">送审</el-button>
       </div>
     </div>

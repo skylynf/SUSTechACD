@@ -2,7 +2,7 @@
   <div class="app-container">
     <div class="filter-container">
       <div style="margin:0 0 5px 20px">
-        <input type="text"  ref="queryexpenseID">
+        <input type="text" placeholder="expenseID" ref="queryexpenseID">
         <el-button type=“button” @click="changeChart">查询</el-button>
 
       </div>

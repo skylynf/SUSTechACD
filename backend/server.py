@@ -119,11 +119,11 @@ def get_pending_expense():
 def add_fund():
       fundID = int(request.json.get('fundID'))
       fundName = request.json.get('fundName')  # request.form.get
-      userID = int(request.json.get('userID'))
+      userID = request.json.get('userID')
       totalQuota = request.json.get('totalQuota')
       usedQuota = request.json.get('usedQuota')
-      abstract = request.json.get('usedQuota')
-      remark = request.json.get('usedQuota')
+      abstract = request.json.get('abstract')
+      remark = request.json.get('remark')
 
       new_fund = {
           'fundID': fundID,
@@ -253,7 +253,9 @@ def modify_expense(expenseID):
       expenseName = request.json.get('expenseName')
       fundID = int(request.json.get('fundID'))
       if fundID not in fund['fundID'].values:
+        print(fundID)
         return jsonify({'error': f'Unkowen fundID {expenseID}.'}), 404
+      print(fundID)
       amount = float(request.json.get('amount'))
       operator = request.json.get('operator')
       category1 = request.json.get('category1')
