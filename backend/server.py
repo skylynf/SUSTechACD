@@ -57,6 +57,8 @@ print(json.dumps(week))
 @app.route('/api/users/<userID>/funds/excel', methods=['GET'])
 @cross_origin()
 def get_user_finish_performance_excel(userID):
+      userID = userID if currentUser == 1 else currentUser
+
       select = fund[fund['userID'] == userID]
       if len(select):
         duo = pd.read_csv('多项经费使用一览表.csv')
@@ -366,20 +368,31 @@ def delete_user(userID):
         return jsonify({'error': f'User with userID {userID} not found.'}), 404
 
 
-
-def export_user_fund():
+# API 导出 经费使用汇总表.xlsx：
+@app.route('/api/funds/<userID>/excel', methods=['GET'])
+@cross_origin()
+def export_user_fund(userID):
   global fund
-  remainQuota = fund['totalQuota'] - fund['usedQuota']
-  executeRate = fund['usedQuota'] / fund['totalQuota']
-  fund['remainQuota'] = remainQuota
-  fund['executeRate'] = executeRate
-  fund = fund.drop('remark', axis=1)
-  fund = fund.drop('abstract', axis=1)
-  fund.rename(columns={'fundID': '经费编号', 'fundName': '经费名称', 'userID': '课题组', 'totalQuota': '可使用经费总额'
-    , 'usedQuota': '已使用经费', 'remainQuota': '经费余额', 'executeRate': '执行率'}, inplace=True)
-  fund.to_csv('经费使用汇总表.csv')
-  fund = pd.read_csv('fund.csv')
 
+  userID = userID if currentUser == 1 else currentUser
+  fund_select = fund[fund['userID'] == userID].reset_index(drop=True)
+
+  fund_select['remainQuota'] = fund_select['totalQuota'] - fund_select['usedQuota']
+  fund_select['executeRate'] = fund_select['usedQuota'] / fund_select['totalQuota']
+  del fund_select['remark']
+  del fund_select['abstract']
+
+  fund_select.rename(columns={'fundID': '经费编号', 'fundName': '经费名称', 'userID': '课题组', 'totalQuota': '可使用经费总额'
+    , 'usedQuota': '已使用经费', 'remainQuota': '经费余额', 'executeRate': '执行率'}, inplace=True)
+  fund_select['执行率是否达标'] = fund_select['执行率'].map(lambda _: '是' if _ > 0.6 else '否')
+
+  zonge = sum(fund_select['可使用经费总额'])
+  yue = sum(fund_select['经费余额'])
+  zxl = 1 - yue / zonge
+  fund_select.loc[len(fund_select)] = ['', '', '合计', zonge, zonge-yue, yue, str('%.2f' % (zxl * 100)) + '%',
+                                       '是' if zxl > 0.6 else '否']
+  fund_select.to_excel('经费使用汇总表.xlsx', index=False)
+  return send_from_directory(os.getcwd(), '经费使用汇总表.xlsx', as_attachment=True)
 
 
 @app.route('/api/users/login', methods=['GET'])
