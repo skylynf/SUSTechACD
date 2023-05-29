@@ -430,7 +430,7 @@ def get_user_finish_performance_new(userID):
       # else:
       #   return jsonify({'message': "This user doesn't have any fund."}), 200
       items = []
-      user_funds = fund[fund['userID'] == '1']
+      user_funds = fund[fund['userID'] == userID]
       print((user_funds))
       if len(user_funds):
         for row in range(len(user_funds)):
