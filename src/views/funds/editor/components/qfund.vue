@@ -119,7 +119,7 @@
 
             console.log(tuple.fundID)
             this.tableData.push(tuple);
-            alert('查询成功！');
+            //alert('查询成功！');
           });
 
           console.log(this.tableData)
@@ -131,10 +131,13 @@
       },
       outputChart() {
         const url = 'http://127.0.0.1:5000/api/users/funds/excel';
-        axios.get(url, {
+        const timestamp = Date.now(); // 生成当前时间戳
+        const downloadUrl = `${url}?timestamp=${timestamp}`; // 添加随机查询参数
+        axios.get(downloadUrl, {
           responseType: 'blob' // 设置响应类型为blob，以便处理文件下载
         })
           .then(response => {
+            console.log(response.data)
           const blob = new Blob([response.data], { type: 'application/vnd.ms-excel' }); // 创建Blob对象
           const link = document.createElement('a'); // 创建一个a标签
           link.href = URL.createObjectURL(blob); // 设置a标签的href属性为Blob URL

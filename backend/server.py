@@ -57,6 +57,7 @@ print(json.dumps(week))
 @app.route('/api/users/funds/excel', methods=['GET'])
 @cross_origin()
 def get_user_finish_performance_excel():
+      print("get_user_finish_performance_excel");
       if currentUser == 1:
         userID = request.args.get('userID')
         if userID is None:
@@ -135,8 +136,8 @@ def add_fund():
       userName = request.json.get('userName')
       totalQuota = request.json.get('totalQuota')
       usedQuota = request.json.get('usedQuota')
-      abstract = request.json.get('usedQuota')
-      remark = request.json.get('usedQuota')
+      abstract = request.json.get('abstract')
+      remark = request.json.get('remark')
 
       user = pd.read_csv('user.csv')
 
