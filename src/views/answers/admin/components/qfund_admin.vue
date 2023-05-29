@@ -22,20 +22,8 @@
         <el-checkbox label="usedQuota">
           usedQuota
         </el-checkbox>
-        <el-checkbox label="1">
-          1
-        </el-checkbox>
-        <el-checkbox label="2">
-          2
-        </el-checkbox>
-        <el-checkbox label="3">
-          3
-        </el-checkbox>
-        <el-checkbox label="4">
-          4
-        </el-checkbox>
-        <el-checkbox label="5">
-          5
+        <el-checkbox label="implementationRate">
+          implementationRate
         </el-checkbox>
         <el-checkbox label="abstract">
           abstract
@@ -63,7 +51,7 @@
   import axios from 'axios'
   import * as echarts from 'echarts'
 
-  const defaultFormThead = ['fundID', 'fundName', 'userID', 'totalQuota', 'usedQuota','1','2','3','4','5', 'abstract',  'remark']
+  const defaultFormThead = ['fundID', 'fundName', 'userID', 'totalQuota', 'usedQuota','implementationRate', 'abstract',  'remark']
 
   export default {
     mounted() {
@@ -75,7 +63,7 @@
       },
       changeChart() {
         var ID = this.$refs.queryexpenseID.value;
-        var url =  'http://127.0.0.1:5000/api/users/' + ID+'/funds' ;//: 'http://127.0.0.1:5000/api/expenses/findAll';
+        var url =  'http://127.0.0.1:5000/api/funds/' + ID ;//: 'http://127.0.0.1:5000/api/expenses/findAll';
         console.log("12345678")
         axios.get(url).then(response => {
           var result;
@@ -91,9 +79,7 @@
           this.tableData = [];
 
           result.forEach(item => {
-            var fun=item.fund;
-            var exp=item.espenses;
-
+            var fun=item;
             var tuple = {
               fundID: fun['fundID'],
               fundName: fun['fundName'],
@@ -102,7 +88,7 @@
               usedQuota: fun['usedQuota'],
               abstract: fun['abstract'],
               remark: fun['remark'],
-
+              implementationRate:fun['usedQuota']/fun['totalQuota'],
             }
 
             console.log(tuple.fundID)
@@ -117,7 +103,7 @@
       return {
         tableData: [],
         key: 1,
-        formTheadOptions: ['fundID', 'fundName', 'userID', 'totalQuota', 'usedQuota','1','2','3','4','5', 'abstract', 'remark'],
+        formTheadOptions: ['fundID', 'fundName', 'userID', 'totalQuota', 'usedQuota','implementationRate', 'abstract', 'remark'],
         checkboxVal: defaultFormThead,
         formThead: defaultFormThead
       }

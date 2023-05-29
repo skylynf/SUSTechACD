@@ -23,6 +23,12 @@ const fundsRouter = {
       name: 'queryFunds',
       meta: { title: '查询经费', noCache: true }
     },
+    {
+      path: 'queryFunds_admin',
+      component: () => import('@/views/answers/admin/queryfund_admin.vue'),
+      name: 'queryFunds_admin',
+      meta: { title: '查询经费使用情况', noCache: true }
+    },
     // {
     //   path: 'deleteExpenses',
     //   component: () => import('@/views/answers/admin/index_delete.vue'),
