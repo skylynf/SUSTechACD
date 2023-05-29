@@ -1,29 +1,29 @@
 <template>
-  <el-form ref="form" :model="form" label-width="80px">
-    <div style="margin: 20px;">增加经费</div>
-    <el-form-item label="经费号">
-      <el-input v-model="form.fundID"></el-input>
+  <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+    <el-form-item label="经费号" prop="fundID">
+      <el-input v-model="ruleForm.fundID"></el-input>
     </el-form-item>
-    <el-form-item label="经费名称">
-      <el-input v-model="form.fundName"></el-input>
+    <el-form-item label="经费名称" prop="fundName">
+      <el-input v-model="ruleForm.fundName"></el-input>
     </el-form-item>
-    <el-form-item label="课题组">
-      <el-input v-model="form.userID"></el-input>
+    <el-form-item label="课题组" prop="userID">
+      <el-input v-model="ruleForm.userID"></el-input>
     </el-form-item>
-    <el-form-item label="经费总额度">
-      <el-input v-model="form.totalQuota"></el-input>
+    <el-form-item label="经费总额度" prop="totalQuota">
+      <el-input v-model="ruleForm.totalQuota"></el-input>
     </el-form-item>
-    <el-form-item label="已使用额度">
-      <el-input v-model="form.usedQuota"></el-input>
+    <el-form-item label="已使用额度" prop="usedQuota">
+      <el-input v-model="ruleForm.usedQuota"></el-input>
     </el-form-item>
-    <el-form-item label="经费内容摘要">
-      <el-input v-model="form.abstract"></el-input>
+    <el-form-item label="摘要" prop="abstract">
+      <el-input type="textarea" v-model="ruleForm.abstract"></el-input>
     </el-form-item>
-    <el-form-item label="备注">
-      <el-input v-model="form.remark"></el-input>
+    <el-form-item label="备注" prop="remark">
+      <el-input type="textarea" v-model="ruleForm.remark"></el-input>
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" @click="onSubmit">立即创建</el-button>
+      <el-button type="primary" @click="onSubmit()">增加</el-button>
+      <el-button @click="resetForm('ruleForm')">重置</el-button>
     </el-form-item>
   </el-form>
 </template>
@@ -37,7 +37,7 @@
   export default {
     data() {
       return {
-        form: {
+        ruleForm: {
           fundID: '',
           fundName: '',
           userID: '',
@@ -45,19 +45,55 @@
           usedQuota: '',
           abstract: '',
           remark: ''
+        },
+        rules: {
+          fundID: [
+            { required: true }
+          ],
+          fundName: [
+            { required: true }
+          ],
+          userID: [
+            { required: true }
+          ],
+          totalQuota: [
+            { required: true }
+          ],
+          usedQuota: [
+            { required: true }
+          ],
+          abstract: [
+            { required: true }
+          ],
+          remark: [
+            { required: true }
+          ]
         }
       }
     },
     methods: {
       onSubmit() {
         console.log('submit!');
-        axios.post(url, this.form)
+        axios.post(url, this.ruleForm)
         .then(response => {
           console.log(response.data)
         })
         .catch(function (error) { // 请求失败处理
             console.log(error);
           });
+      },
+      // submitForm(formName) {
+      //   this.$refs[formName].validate((valid) => {
+      //     if (valid) {
+      //       alert('submit!');
+      //     } else {
+      //       console.log('error submit!!');
+      //       return false;
+      //     }
+      //   });
+      // },
+      resetForm(formName) {
+        this.$refs[formName].resetFields();
       }
     }
   }

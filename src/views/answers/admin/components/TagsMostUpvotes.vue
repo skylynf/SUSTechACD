@@ -73,9 +73,9 @@ export default {
       axios.get(url).then(response => {
         var result;
         if(ID){
-          result = [JSON.parse(response.data)];
+          result = [response.data];
         }else{
-          result = response.data;
+        result =response.data;
         }
         console.log(result)
         this.tableData = [];
