@@ -12,8 +12,8 @@
     <el-form-item label="支出额度" prop="amount">
       <el-input v-model="ruleForm.amount"></el-input>
     </el-form-item>
-    <el-form-item label="经办人" prop="userID">
-      <el-input v-model="ruleForm.userID"></el-input>
+    <el-form-item label="经办人" prop="operator">
+      <el-input v-model="ruleForm.operator"></el-input>
     </el-form-item>
     <el-form-item label="支出类别一级" prop="category1">
       <el-select v-model="ruleForm.category1" >
@@ -84,7 +84,7 @@
           amount: [
             { required: true },
           ],
-          userID: [
+          operator: [
             { required: true },
           ],
           category1: [

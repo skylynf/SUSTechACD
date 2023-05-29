@@ -12,9 +12,6 @@
     <el-form-item label="经费总额度" prop="totalQuota">
       <el-input v-model="ruleForm.totalQuota"></el-input>
     </el-form-item>
-    <el-form-item label="已使用额度" prop="usedQuota">
-      <el-input v-model="ruleForm.usedQuota"></el-input>
-    </el-form-item>
     <el-form-item label="摘要" prop="abstract">
       <el-input type="textarea" v-model="ruleForm.abstract"></el-input>
     </el-form-item>
@@ -42,7 +39,7 @@
           fundName: '',
           userName: '',
           totalQuota: '',
-          usedQuota: '',
+          usedQuota: '0',
           abstract: '',
           remark: ''
         },
@@ -57,9 +54,6 @@
             { required: true }
           ],
           totalQuota: [
-            { required: true }
-          ],
-          usedQuota: [
             { required: true }
           ],
           abstract: [

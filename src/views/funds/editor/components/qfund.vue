@@ -141,7 +141,7 @@
           const blob = new Blob([response.data], { type: 'application/vnd.ms-excel' }); // 创建Blob对象
           const link = document.createElement('a'); // 创建一个a标签
           link.href = URL.createObjectURL(blob); // 设置a标签的href属性为Blob URL
-          link.download = 'chart.xlsx'; // 设置下载的文件名
+          link.download = '多项经费使用一览表.xlsx'; // 设置下载的文件名
           link.click(); // 模拟点击a标签进行下载
           URL.revokeObjectURL(link.href); // 释放URL对象
         })

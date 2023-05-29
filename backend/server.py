@@ -333,6 +333,30 @@ def modify_expense(expenseID):
     else:
       return jsonify({'error': f'未找到支出'}), 404
 
+
+@app.route('/api/funds/chart/<int:fundID>', method = ['GET'])
+@cross_origin()
+def generate_fund_chart(fundID):
+  filtered_fund = fund.loc[fund['fundID'] == fundID]
+  # 获取差值
+  quota_diff = filtered_fund['totalQuota'] - filtered_fund['usedQuota']
+  # 提取单个数字值
+  remain = quota_diff.item()
+  filtered_expense = expense.loc[expense['fundID'] == fundID]
+  id_amount = filtered_expense.set_index('expenseID')['amount'].to_dict()
+  id_category1 = filtered_expense.set_index('expenseID')['category1'].to_dict()
+  items = {'剩余费用' : remain}
+
+  for expenseID in id_amount.keys():
+    category1 = id_category1[expenseID]
+    amount = id_amount[expenseID]
+    if category1 in items.keys():
+      items[category1] = items[category1] + amount
+    else:
+      items[category1] = amount
+
+
+
 #添加用户
 @app.route('/api/user/add', methods=['POST'])
 @cross_origin()

@@ -4,6 +4,7 @@
       <div style="margin:0 0 5px 20px">
         <input type="text" placeholder="fundID"  ref="queryexpenseID">
         <el-button type=“button” @click="changeChart">查询</el-button>
+        <el-button type=“button” @click="outputChart">导出</el-button>
 
       </div>
       <el-checkbox-group v-model="checkboxVal">
@@ -102,6 +103,27 @@
           const errorMessage = error.response.data.error;
           alert(errorMessage);
         });
+      },
+      outputChart() {
+        const url = 'http://127.0.0.1:5000/api/funds/excel';
+        const timestamp = Date.now(); // 生成当前时间戳
+        const downloadUrl = `${url}?timestamp=${timestamp}`; // 添加随机查询参数
+        axios.get(downloadUrl, {
+          responseType: 'blob' // 设置响应类型为blob，以便处理文件下载
+        })
+          .then(response => {
+            console.log(response.data)
+            const blob = new Blob([response.data], { type: 'application/vnd.ms-excel' }); // 创建Blob对象
+            const link = document.createElement('a'); // 创建一个a标签
+            link.href = URL.createObjectURL(blob); // 设置a标签的href属性为Blob URL
+            link.download = '经费使用汇总表.xlsx'; // 设置下载的文件名
+            link.click(); // 模拟点击a标签进行下载
+            URL.revokeObjectURL(link.href); // 释放URL对象
+          })
+          .catch(error => {
+            const errorMessage = error.response.data.error;
+            alert(errorMessage);
+          });
       }
     },
     data() {

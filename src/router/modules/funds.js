@@ -21,13 +21,19 @@ const fundsRouter = {
       path: 'queryFunds',
       component: () => import('@/views/funds/editor/queryfund.vue'),
       name: 'queryFunds',
-      meta: { title: '查询经费', noCache: true ,  roles: ['admin','editor']}
+      meta: { title: '多项经费使用一览', noCache: true ,  roles: ['admin','editor']}
     },
     {
       path: 'queryFunds_admin',
       component: () => import('@/views/funds/admin/queryfund_admin.vue'),
       name: 'queryFunds_admin',
       meta: { title: '查询经费使用情况', noCache: true ,  roles: ['admin']}
+    },
+    {
+      path: 'showChart',
+      component: () => import('@/views/funds/admin/showchart.vue'),
+      name: 'showchart',
+      meta: { title: '可视化', noCache: true ,  roles: ['admin']}
     },
     // {
     //   path: 'deleteExpenses',

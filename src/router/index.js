@@ -228,7 +228,19 @@ export const asyncRoutes = [
 
   expensesRouter,
   fundsRouter,
-
+  {
+    path: '/searchExpensesAdmin',
+    component: Layout,
+    redirect: '/searchExpensesAdmin',
+    children: [
+      {
+        path: 'users',
+        component: () => import('@/views/expenses/admin/index_search_admin.vue'),
+        name: 'searchExpensesAdmin',
+        meta: { title: '审批支出', noCache: true, icon: 'user', roles: ['admin']}
+      }
+    ]
+  },
   // {
   //   path: '/example',
   //   component: Layout,
