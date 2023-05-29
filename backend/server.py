@@ -11,9 +11,7 @@ app = Flask(__name__)
 CORS(app)
 expense = pd.read_csv('expense.csv')
 users = pd.read_csv('user.csv')
-users['userID'] = users['userID'].astype(str)
 fund = pd.read_csv('fund.csv')
-fund['userID'] = fund['userID'].astype(str)
 filtered_df = fund[fund['fundID'] == 5433912]
 totalQuota = filtered_df['totalQuota'].values[0]
 result = fund[fund['userID'] == 1]['fundID'].tolist()
@@ -426,9 +424,9 @@ def find_all_expenses():
   return result.to_json(orient='records'), 200
 
 
-@app.route('/api/users/<userID>/funds', methods=['GET'])
+@app.route('/api/users/funds', methods=['GET'])
 @cross_origin()
-def get_user_finish_performance_new(userID):
+def get_user_finish_performance_new():
       # select = fund[fund['userID'] == userID]
       # if len(select):
       #   items = []
@@ -442,9 +440,15 @@ def get_user_finish_performance_new(userID):
       #   return jsonify({'items': items}), 200
       # else:
       #   return jsonify({'message': "This user doesn't have any fund."}), 200
+      print(2)
+      userID = None
       items = []
-      user_funds = fund[fund['userID'] == userID]
-      print((user_funds))
+      print(userID)
+      if userID is not None:
+        user_funds = fund[fund['userID'] == userID]
+      else:
+        user_funds = fund
+      print(user_funds)
       if len(user_funds):
         for row in range(len(user_funds)):
           amounts = expense[expense['fundID'] == user_funds.iloc[row]['fundID']]['amount'].tolist()
@@ -452,7 +456,7 @@ def get_user_finish_performance_new(userID):
           for i in range(len(amounts)):
             fund_dic[f'amount{i}'] = amounts[i]
           items.append(fund_dic)
-          print(json.dumps(items))
+        print(json.dumps(items))
         return json.dumps(items), 200
       else:
         return jsonify({'message': "This user doesn't have any fund."}), 404
