@@ -497,13 +497,13 @@ def generate_time_list_fund():
     week[f"第{i}周"] = 0
   id_totalQuota_dic = fund.set_index('fundID')['totalQuota'].to_dict()
   id_createData = fund.set_index('fundID')['createDate'].to_dict()
-  for expenseID in id_dict.keys():
-    dateWeek = int((id_createData[expenseID] - initialTime) / 60 / 60 / 24 / 7)
+  for fundID in id_totalQuota_dic.keys():
+    dateWeek = int((id_createData[fundID] - initialTime) / 60 / 60 / 24 / 7)
     dateWeek = f"第{dateWeek}周"
     if dateWeek in week.keys():
-      week[dateWeek] = week[dateWeek] + id_totalQuota_dic[expenseID]
+      week[dateWeek] = week[dateWeek] + id_totalQuota_dic[fundID]
     else:
-      week[dateWeek] = id_totalQuota_dic[expenseID]
+      week[dateWeek] = id_totalQuota_dic[fundID]
   return json.dumps(week)
 if __name__ == '__main__':
     app.run(debug=True)
