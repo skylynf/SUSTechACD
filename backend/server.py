@@ -81,7 +81,7 @@ def get_user_finish_performance_excel(userID):
 
         return send_from_directory(os.getcwd(), '多项经费使用一览表.xlsx', as_attachment=True)
       else:
-        return jsonify({'message': "This user doesn't have any fund."}), 200
+        return jsonify({'message': "This user doesn't have any fund."}), 404
 
 
 # API 2. 查询若干个fundID的使用情况和执行率：
