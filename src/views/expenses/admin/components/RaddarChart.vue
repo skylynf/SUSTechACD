@@ -122,7 +122,7 @@
         console.log('submit!');
         axios.post(url, this.ruleForm)
         .then(response => {
-          console.log(response.data)
+          alert('成功增加！')
         })
         .catch(error => {
           const errorMessage = error.response.data.error;

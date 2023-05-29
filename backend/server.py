@@ -181,7 +181,7 @@ def add_expense():
     expenseName = request.json.get('expenseName')
     fundID = int(request.json.get('fundID'))
     if fundID not in fund['fundID'].values:
-      return jsonify({'error': f'Unkowen fundID {expenseID}.'}), 404
+      return jsonify({'error': f'Unkowen fundID {fundID}.'}), 404
     amount = float(request.json.get('amount'))
     operator = request.json.get('operator')
     category1 = request.json.get('category1')
