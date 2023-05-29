@@ -2,7 +2,7 @@
   <div class="app-container">
     <div class="filter-container">
       <div style="margin:0 0 5px 20px">
-        <input type="text"  ref="queryexpenseID">
+        <input type="text" placeholder="请输入user_ID" ref="queryexpenseID">
         <el-button type=“button” @click="changeChart">查询</el-button>
 
       </div>
@@ -22,20 +22,20 @@
         <el-checkbox label="usedQuota">
           usedQuota
         </el-checkbox>
-        <el-checkbox label="1">
-          1
+        <el-checkbox label="amount1">
+          amount1
         </el-checkbox>
-        <el-checkbox label="2">
-          2
+        <el-checkbox label="amount2">
+          amount2
         </el-checkbox>
-        <el-checkbox label="3">
-          3
+        <el-checkbox label="amount3">
+          amount3
         </el-checkbox>
-        <el-checkbox label="4">
-          4
+        <el-checkbox label="amount4">
+          amount4
         </el-checkbox>
-        <el-checkbox label="5">
-          5
+        <el-checkbox label="amount5">
+          amount5
         </el-checkbox>
         <el-checkbox label="abstract">
           abstract
@@ -63,7 +63,7 @@
   import axios from 'axios'
   import * as echarts from 'echarts'
 
-  const defaultFormThead = ['fundID', 'fundName', 'userID', 'totalQuota', 'usedQuota','1','2','3','4','5', 'abstract',  'remark']
+  const defaultFormThead = ['fundID', 'fundName', 'userID', 'totalQuota', 'usedQuota','amount1','amount2','amount3','amount4','amount5', 'abstract',  'remark']
 
   export default {
     mounted() {
@@ -80,10 +80,10 @@
         axios.get(url).then(response => {
           var result;
           // if(ID){
-          console.log(response.data['items'])
+          // console.log(response.data['items'])
 
 
-          result = response.data['items'];//[0]['fund']);
+          result= response.data;//= response.data['items'];//[0]['fund']);
           // }else{
           //   result = response.data;
           // }
@@ -91,8 +91,8 @@
           this.tableData = [];
 
           result.forEach(item => {
-            var fun=item.fund;
-            var exp=item.espenses;
+            var fun=item;
+            // var exp=item.espenses;
 
             var tuple = {
               fundID: fun['fundID'],
@@ -102,6 +102,11 @@
               usedQuota: fun['usedQuota'],
               abstract: fun['abstract'],
               remark: fun['remark'],
+              amount1:fun['amount0'],
+              amount2:fun['amount1'],
+              amount3:fun['amount2'],
+              amount4:fun['amount3'],
+              amount5:fun['amount4'],
 
             }
 
@@ -117,7 +122,7 @@
       return {
         tableData: [],
         key: 1,
-        formTheadOptions: ['fundID', 'fundName', 'userID', 'totalQuota', 'usedQuota','1','2','3','4','5', 'abstract', 'remark'],
+        formTheadOptions: ['fundID', 'fundName', 'userID', 'totalQuota', 'usedQuota','amount1','amount2','amount3','amount4','amount5', 'abstract', 'remark'],
         checkboxVal: defaultFormThead,
         formThead: defaultFormThead
       }
