@@ -53,6 +53,7 @@
       <el-table-column >
         <template slot-scope="scope">
           <el-button type=“button” @click="approve(scope.row)">批准</el-button>
+          <el-button type=“button” @click="reject(scope.row)">拒绝</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -75,6 +76,11 @@ export default {
     },
     approve(e){
       var url='http://127.0.0.1:5000/api/users/'+e.expenseID+'/accept';
+      console.log((e.expenseID))
+      axios.post(url);
+    },
+    reject(e){
+      var url='http://127.0.0.1:5000/api/users/'+e.expenseID+'/reject';
       console.log((e.expenseID))
       axios.post(url);
     },
