@@ -40,7 +40,13 @@ const expensesRouter = {
       component: () => import('@/views/answers/admin/index_modify.vue'),
       name: 'modifyExpenses',
       meta: { title: '修改支出', noCache: true }
-    }
+    },
+{
+  path: 'searchExpensesAdmin',
+    component: () => import('@/views/answers/admin/index_search_admin.vue'),
+  name: 'searchExpensesAdmin',
+  meta: { title: '查询未审批支出', noCache: true }
+},
   ]
 }
 
