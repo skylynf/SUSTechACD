@@ -387,24 +387,22 @@ def delete_user(userID):
 
 
 # API 导出 经费使用汇总表.xlsx：
-@app.route('/api/funds/excel', methods=['GET'])
+@app.route('/api/excel/funds/<fundIDs>', methods=['GET'])
 @cross_origin()
-def export_user_fund():
-  global fund
-
-  if currentUser == 1:
-    userID = request.args.get('userID')
-    if userID is None:
-      fund_select = fund
-    else:
-      fund_select = fund[fund['userID'] == int(userID)].reset_index(drop=True)
-  else:
-    fund_select = fund[fund['userID'] == currentUser].reset_index(drop=True)
+def export_user_fund(fundIDs):
+  fundID_lst = fundIDs.split(",")
+  items = []
+  for _ in fundID_lst:
+    select = fund[fund['fundID'] == int(_)]
+    if len(select):
+      items.append(select.iloc[0])
+  fund_select = pd.DataFrame(items) # list(zip(_ for _ in items))
 
   fund_select['remainQuota'] = fund_select['totalQuota'] - fund_select['usedQuota']
   fund_select['executeRate'] = fund_select['usedQuota'] / fund_select['totalQuota']
   del fund_select['remark']
   del fund_select['abstract']
+  del fund_select['createDate']
 
   fund_select.rename(columns={'fundID': '经费编号', 'fundName': '经费名称', 'userID': '课题组', 'totalQuota': '可使用经费总额'
     , 'usedQuota': '已使用经费', 'remainQuota': '经费余额', 'executeRate': '执行率'}, inplace=True)
