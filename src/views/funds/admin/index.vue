@@ -32,8 +32,8 @@
 <script>
 import PanelGroup from './components/PanelGroup'
 import LineChart from './components/LineChart'
-import RaddarChart from './components/RaddarChart'
-import PieChart from './components/PieChart'
+import RaddarChart from './components/addExpense'
+import PieChart from './components/DeleteExpense'
 import BarChart from './components/BarChart'
 import axios from 'axios'
 

@@ -90,8 +90,16 @@ export default {
       axios.get(url).then(response => {
         var result;
         result = response.data;
-        console.log(result)
+        console.log(result);
         this.tableData = [];
+
+        // // if result is not iteratable
+        // if (!result[Symbol.iterator]) {
+        //   alert('not iteratable');
+        // } else{
+        //   alert('iteratable');
+        // }
+
 
         result.forEach(item => {
           var tuple = {
@@ -105,6 +113,7 @@ export default {
             abstract: item.abstract,
             remark: item.remark,
             applicationState: item.applicationState,
+            createDate: item.createDate
           }
           console.log(tuple.expenseID)
           this.tableData.push(tuple);
