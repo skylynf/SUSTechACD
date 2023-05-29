@@ -122,11 +122,12 @@
         console.log('submit!');
         axios.post(url, this.ruleForm)
         .then(response => {
-          console.log(response.data)
+          alert('成功增加！')
         })
-        .catch(function (error) { // 请求失败处理
-            console.log(error);
-          });
+        .catch(error => {
+          const errorMessage = error.response.data.error;
+          alert(errorMessage);
+        });
       },
       add() {
         var id=this.ruleForm.expenseID;
