@@ -54,12 +54,18 @@ print(json.dumps(week))
 
 
 # API 1. 获取课题组全部经费完成情况（支出情况）Excel文件：
-@app.route('/api/users/<userID>/funds/excel', methods=['GET'])
+@app.route('/api/users/funds/excel', methods=['GET'])
 @cross_origin()
-def get_user_finish_performance_excel(userID):
-      userID = userID if currentUser == 1 else currentUser
+def get_user_finish_performance_excel():
+      if currentUser == 1:
+        userID = request.args.get('userID')
+        if userID is None:
+          select = fund
+        else:
+          select = fund[fund['userID'] == int(userID)]
+      else:
+        select = fund[fund['userID'] == currentUser]
 
-      select = fund[fund['userID'] == userID]
       if len(select):
         duo = pd.read_csv('多项经费使用一览表.csv')
         count = 0
@@ -71,13 +77,13 @@ def get_user_finish_performance_excel(userID):
           lst_expense_amount += [0] * (12 - len(lst_expense_amount))
 
           l = list(select[select['fundID'] == _].iloc[0])
-          duo.loc[len(duo)] = [count] + l[:2] + ['有效期fixme', l[3]] + lst_expense_amount + [sum_lea, l[3] - sum_lea, '天数fixme', str('%.2f' % (sum_lea / l[3] * 100)) + '%', '是' if sum_lea / l[3] > 0.6 else '否']
+          duo.loc[len(duo)] = [count] + l[:2] + [l[3]] + lst_expense_amount + [sum_lea, l[3] - sum_lea, str('%.2f' % (sum_lea / l[3] * 100)) + '%', '是' if sum_lea / l[3] > 0.6 else '否']
 
         zonge = sum(duo['经费总额'])
         yue = sum(duo['经费余额'])
-        zxl = 1 - yue / zonge
-        duo.loc[len(duo)] = ['', '', '合计', '', zonge, '', '', '', '', '', '', '', '', '', '', '', '',
-                             sum(duo['已使用经费']), yue, '', str('%.2f' % (zxl * 100)) + '%',
+        zxl = 1 if yue == 0 else 1 - yue / zonge
+        duo.loc[len(duo)] = ['', '', '合计', zonge, '', '', '', '', '', '', '', '', '', '', '', '',
+                             sum(duo['已使用经费']), yue, str('%.2f' % (zxl * 100)) + '%',
                              '是' if zxl > 0.6 else '否']
         duo.to_excel('多项经费使用一览表.xlsx', index=False)
 
@@ -370,13 +376,19 @@ def delete_user(userID):
 
 
 # API 导出 经费使用汇总表.xlsx：
-@app.route('/api/funds/<userID>/excel', methods=['GET'])
+@app.route('/api/funds/excel', methods=['GET'])
 @cross_origin()
-def export_user_fund(userID):
+def export_user_fund():
   global fund
 
-  userID = userID if currentUser == 1 else currentUser
-  fund_select = fund[fund['userID'] == userID].reset_index(drop=True)
+  if currentUser == 1:
+    userID = request.args.get('userID')
+    if userID is None:
+      fund_select = fund
+    else:
+      fund_select = fund[fund['userID'] == int(userID)].reset_index(drop=True)
+  else:
+    fund_select = fund[fund['userID'] == currentUser].reset_index(drop=True)
 
   fund_select['remainQuota'] = fund_select['totalQuota'] - fund_select['usedQuota']
   fund_select['executeRate'] = fund_select['usedQuota'] / fund_select['totalQuota']
@@ -389,7 +401,7 @@ def export_user_fund(userID):
 
   zonge = sum(fund_select['可使用经费总额'])
   yue = sum(fund_select['经费余额'])
-  zxl = 1 - yue / zonge
+  zxl = 1 if yue == 0 else 1 - yue / zonge
   fund_select.loc[len(fund_select)] = ['', '', '合计', zonge, zonge-yue, yue, str('%.2f' % (zxl * 100)) + '%',
                                        '是' if zxl > 0.6 else '否']
   fund_select.to_excel('经费使用汇总表.xlsx', index=False)
