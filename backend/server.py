@@ -70,6 +70,7 @@ def get_user_finish_performance_excel():
         duo = pd.read_csv('多项经费使用一览表.csv')
         count = 0
         expense_3 = expense[expense['applicationState'] == 3]
+        print(expense_3)
         for _ in select['fundID']:
           count += 1
           lst_expense_amount = list(expense_3[expense_3['fundID'] == _]['amount'])
@@ -131,11 +132,18 @@ def get_pending_expense():
 def add_fund():
       fundID = int(request.json.get('fundID'))
       fundName = request.json.get('fundName')  # request.form.get
-      userID = int(request.json.get('userID'))
+      userName = request.json.get('userName')
       totalQuota = request.json.get('totalQuota')
       usedQuota = request.json.get('usedQuota')
       abstract = request.json.get('usedQuota')
       remark = request.json.get('usedQuota')
+
+      user = pd.read_csv('user.csv')
+
+      if userName not in user['userName'].values:
+          print('error success')
+          return jsonify({'error': f'User {userName} not found.'}), 404
+      userID = int(user[user['userName'] == userName]['userID'].values[0])
 
       new_fund = {
           'fundID': fundID,
@@ -154,6 +162,7 @@ def add_fund():
       if fundID in fund['fundID'].values:
           print('error success')
           return jsonify({'error': f'Duplicated fundID {fundID}.'}), 404
+
 
       fund.loc[len(fund)] = new_fund
       fund.to_csv('fund.csv', index=False)
@@ -425,7 +434,7 @@ def examineUser():
 @app.route('/api/users/<int:expenseID>/accept', methods=['POST'])
 @cross_origin()
 def accept_pending(expenseID):
-  if expenseID in expense['expenseID'].values():
+  if expenseID in expense['expenseID'].values:
     expense.loc[expense['expenseID'] == expenseID, 'applicationState'] = 3
     expense.to_csv('expense.csv', index=False)
     return jsonify('accept successfully'), 200
@@ -434,7 +443,7 @@ def accept_pending(expenseID):
 @app.route('/api/users/<int:expenseID>/reject', methods=['POST'])
 @cross_origin()
 def reject_pending(expenseID):
-  if expenseID in expense['expenseID'].values():
+  if expenseID in expense['expenseID'].values:
     expense.loc[expense['expenseID'] == expenseID, 'applicationState'] = 2
     expense.to_csv('expense.csv', index=False)
     return jsonify('reject successfully'), 200
@@ -519,9 +528,9 @@ def generate_time_list_fund():
     dateWeek = int((id_createData[fundID] - initialTime) / 60 / 60 / 24 / 7)
     dateWeek = f"第{dateWeek}周"
     if dateWeek in week.keys():
-      week[dateWeek] = week[dateWeek] + id_totalQuota_dic[fundID]
+      week[dateWeek] = week[dateWeek] + float(id_totalQuota_dic[fundID])
     else:
-      week[dateWeek] = id_totalQuota_dic[fundID]
+      week[dateWeek] = float(id_totalQuota_dic[fundID])
   return json.dumps(week)
 if __name__ == '__main__':
     app.run(debug=True)
