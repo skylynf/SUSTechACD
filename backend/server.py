@@ -428,7 +428,7 @@ def reject_pending(expenseID):
 @app.route('/api/expenses/findAll', methods=['GET'])
 @cross_origin()
 def find_all_expenses():
-  if currentUser == '1':
+  if currentUser == 1:
     return expense.to_json(orient='records'), 200
   result = fund[fund['userID'] == currentUser]['fundID'].tolist()
   result = expense[expense['fundID'].isin(result)]
@@ -452,13 +452,17 @@ def get_user_finish_performance_new():
       #   return jsonify({'items': items}), 200
       # else:
       #   return jsonify({'message': "This user doesn't have any fund."}), 200
-      userID = int(request.json.get('userID'))
+      userID = request.json.get('userID')
       items = []
       print(userID)
-      if userID is not None:
+      if userID is not None and currentUser == 1:
+        userID = int(userID)
         user_funds = fund[fund['userID'] == userID]
       else:
-        user_funds = fund
+        if currentUser == 1:
+          user_funds = fund
+        else:
+          user_funds = fund[fund['userID'] == currentUser]
       print(user_funds)
       if len(user_funds):
         for row in range(len(user_funds)):
