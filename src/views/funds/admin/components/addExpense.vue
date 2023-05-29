@@ -6,8 +6,8 @@
     <el-form-item label="经费名称" prop="fundName">
       <el-input v-model="ruleForm.fundName"></el-input>
     </el-form-item>
-    <el-form-item label="课题组" prop="userID">
-      <el-input v-model="ruleForm.userID"></el-input>
+    <el-form-item label="课题组" prop="userName">
+      <el-input v-model="ruleForm.userName"></el-input>
     </el-form-item>
     <el-form-item label="经费总额度" prop="totalQuota">
       <el-input v-model="ruleForm.totalQuota"></el-input>
@@ -40,7 +40,7 @@
         ruleForm: {
           fundID: '',
           fundName: '',
-          userID: '',
+          userName: '',
           totalQuota: '',
           usedQuota: '',
           abstract: '',
@@ -53,7 +53,7 @@
           fundName: [
             { required: true }
           ],
-          userID: [
+          userName: [
             { required: true }
           ],
           totalQuota: [

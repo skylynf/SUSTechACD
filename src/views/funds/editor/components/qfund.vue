@@ -76,9 +76,15 @@
       },
       changeChart() {
         var ID = this.$refs.queryexpenseID.value;
-        var url =  'http://127.0.0.1:5000/api/users/' + ID+'/funds' ;//: 'http://127.0.0.1:5000/api/expenses/findAll';
-        console.log("12345678")
-        axios.get(url).then(response => {
+        // var url =  'http://127.0.0.1:5000/api/users/' + ID+'/funds' ;//: 'http://127.0.0.1:5000/api/expenses/findAll';
+        var url = 'http://127.0.0.1:5000/api/users/funds';
+        console.log("send url.")
+        axios.get(url, {
+          params: {
+            ID: ID
+          }
+        }).then(response => {
+
           var result;
           // if(ID){
           // console.log(response.data['items'])
@@ -124,13 +130,17 @@
         });
       },
       outputChart() {
-        var ID = this.$refs.queryexpenseID.value;
-        var url =  'http:';
-        console.log("12345678")
-        axios.get(url).then(response => {
-          var result;
-          // if(ID){
-          // console.log(response.data['items'])
+        const url = 'http://127.0.0.1:5000/api/users/funds/excel';
+        axios.get(url, {
+          responseType: 'blob' // 设置响应类型为blob，以便处理文件下载
+        })
+          .then(response => {
+          const blob = new Blob([response.data], { type: 'application/vnd.ms-excel' }); // 创建Blob对象
+          const link = document.createElement('a'); // 创建一个a标签
+          link.href = URL.createObjectURL(blob); // 设置a标签的href属性为Blob URL
+          link.download = 'chart.xlsx'; // 设置下载的文件名
+          link.click(); // 模拟点击a标签进行下载
+          URL.revokeObjectURL(link.href); // 释放URL对象
         })
         .catch(error => {
           const errorMessage = error.response.data.error;

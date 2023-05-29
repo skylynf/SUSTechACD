@@ -5,6 +5,7 @@
 <script>
 import echarts from 'echarts'
 import resize from './mixins/resize'
+import axios from 'axios'
 
 export default {
   mixins: [resize],
@@ -28,11 +29,15 @@ export default {
   },
   data() {
     return {
-      chart: null
+      chart: null,
+      data_expense: null, // Variable to store the API data
+      data_fund: null // Variable to store the API data
+
     }
   },
   mounted() {
     this.initChart()
+    this.fetchChartData()
   },
   beforeDestroy() {
     if (!this.chart) {
@@ -187,7 +192,7 @@ export default {
           },
           data: [120, 110, 125, 145, 122, 165, 122, 220, 182, 191, 134, 150]
         }, {
-          name: 'CUCC',
+          name: 'Expected',
           type: 'line',
           smooth: true,
           symbol: 'circle',
@@ -220,6 +225,103 @@ export default {
           },
           data: [220, 182, 125, 145, 122, 191, 134, 150, 120, 110, 165, 122]
         }]
+      })
+    },
+    fetchChartData() {
+      axios.get('http://localhost:5000/api/chart/expense') // Replace with your API endpoint
+        .then(response => {
+          this.data_expense = response.data
+          this.updateChart()
+        })
+        .catch(error => {
+          console.error(error)
+        })
+      axios.get('http://localhost:5000/api/chart/fund') // Replace with your API endpoint
+        .then(response => {
+          this.data_fund = response.data
+          this.updateChart()
+        })
+        .catch(error => {
+          console.error(error)
+        })
+    },
+    updateChart() {
+      if (!this.chart || !this.data_expense || !this.data_fund) {
+        return
+      }
+
+      // Extract x-axis labels and series data from the API response
+      const xAxisData = Object.keys(this.data_expense)
+      const expensesData = Object.values(this.data_expense)
+      const fundData = Object.values(this.data_fund)
+
+      // Update the chart option with the new data
+      this.chart.setOption({
+        // ...
+        // Update the necessary options with the new data
+        // ...
+        xAxis: [
+          {
+            type: 'category',
+            boundaryGap: false,
+            axisLine: {
+              lineStyle: {
+                color: '#57617B'
+              }
+            },
+            data: xAxisData
+          }
+        ],
+        series: [
+          {
+            name: 'Expense',
+            type: 'line',
+            smooth: true,
+            symbol: 'circle',
+            symbolSize: 5,
+            showSymbol: false,
+            lineStyle: {
+              normal: {
+                width: 1
+              }
+            },
+            areaStyle: {
+              // ...
+              // Area style configuration
+              // ...
+            },
+            itemStyle: {
+              // ...
+              // Item style configuration
+              // ...
+            },
+            data: expensesData
+          },
+          {
+            name: 'Fund',
+            type: 'line',
+            smooth: true,
+            symbol: 'circle',
+            symbolSize: 5,
+            showSymbol: false,
+            lineStyle: {
+              normal: {
+                width: 1
+              }
+            },
+            areaStyle: {
+              // ...
+              // Area style configuration
+              // ...
+            },
+            itemStyle: {
+              // ...
+              // Item style configuration
+              // ...
+            },
+            data: fundData
+          }
+        ]
       })
     }
   }
