@@ -20,7 +20,6 @@ print(result)
 items = []
 user_funds = fund[fund['userID'] == '1']
 if len(user_funds):
-
   for row in range(len(user_funds)):
     amounts = expense[expense['fundID'] == user_funds.iloc[row]['fundID']]['amount'].tolist()
     fund_dic = user_funds.iloc[row].to_dict()
@@ -430,21 +429,20 @@ def get_user_finish_performance_new(userID):
       #   return jsonify({'items': items}), 200
       # else:
       #   return jsonify({'message': "This user doesn't have any fund."}), 200
-
       items = []
-      user_funds = fund[fund['userID'] == userID]
+      user_funds = fund[fund['userID'] == '1']
+      print((user_funds))
       if len(user_funds):
         for row in range(len(user_funds)):
           amounts = expense[expense['fundID'] == user_funds.iloc[row]['fundID']]['amount'].tolist()
           fund_dic = user_funds.iloc[row].to_dict()
           for i in range(len(amounts)):
             fund_dic[f'amount{i}'] = amounts[i]
-
           items.append(fund_dic)
-          return json.dumps(items), 200
+          print(json.dumps(items))
+        return json.dumps(items), 200
       else:
         return jsonify({'message': "This user doesn't have any fund."}), 404
-
 
 
 
