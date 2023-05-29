@@ -16,6 +16,7 @@ import frequentRouter from './modules/frequent-apis'
 import tagRouter from './modules/tags'
 import relationRouter from './modules/relations'
 import expensesRouter from "@/router/modules/expenses";
+import fundsRouter from "@/router/modules/funds";
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -58,6 +59,7 @@ export const constantRoutes = [
       }
     ]
   },
+  fundsRouter,
   {
     path: '/users',
     component: Layout,
