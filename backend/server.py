@@ -21,14 +21,7 @@ result = expense[expense['fundID'].isin(result)]
 print(result)
 items = []
 user_funds = fund[fund['userID'] == '1']
-if len(user_funds):
-  for row in range(len(user_funds)):
-    amounts = expense[expense['fundID'] == user_funds.iloc[row]['fundID']]['amount'].tolist()
-    fund_dic = user_funds.iloc[row].to_dict()
-    for i in range(len(amounts)):
-      fund_dic[f'amount{i}'] = amounts[i]
-    items.append(fund_dic)
-print(json.dumps(items))
+print(expense.to_json(orient='records'))
 currentUser = '1'
 # API 1. 获取课题组全部经费完成情况（支出情况）：
 # @app.route('/api/users/<userID>/funds', methods=['GET'])
@@ -410,6 +403,8 @@ def reject_pending(expenseID):
 @app.route('/api/expenses/findAll', methods=['GET'])
 @cross_origin()
 def find_all_expenses():
+  if currentUser == '1':
+    return expense.to_json(orient='records'), 200
   result = fund[fund['userID'] == currentUser]['fundID'].tolist()
   result = expense[expense['fundID'].isin(result)]
   print(result.to_json(orient='records'))
@@ -447,7 +442,10 @@ def get_user_finish_performance_new(userID):
       else:
         return jsonify({'message': "This user doesn't have any fund."}), 404
 
-
+def generate_time_list():
+  week = []
+  id_amount_dict = expense.set_index('expenseID')['amount'].to_dict()
+  id__dict = expense.set_index('expenseID')['amount'].to_dict()
 
 if __name__ == '__main__':
     app.run(debug=True)
