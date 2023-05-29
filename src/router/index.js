@@ -45,7 +45,6 @@ import fundsRouter from "@/router/modules/funds";
  * all roles can be accessed
  */
 export const constantRoutes = [
-  expensesRouter,
   {
     path: '/',
     component: Layout,
@@ -59,21 +58,22 @@ export const constantRoutes = [
       }
     ]
   },
+  expensesRouter,
   fundsRouter,
-  {
-    path: '/users',
-    component: Layout,
-    redirect: '/users',
-    children: [
-      {
-        path: 'users',
-        component: () => import('@/views/users/index'),
-        name: 'Users',
-        meta: { title: 'Users', icon: 'user', affix: true }
-      }
-    ]
-  },
-  tagRouter,
+  // {
+  //   path: '/users',
+  //   component: Layout,
+  //   redirect: '/users',
+  //   children: [
+  //     {
+  //       path: 'users',
+  //       component: () => import('@/views/users/index'),
+  //       name: 'Users',
+  //       meta: { title: 'Users', icon: 'user', affix: true }
+  //     }
+  //   ]
+  // },
+  // tagRouter,
 
   {
     path: '/redirect',
@@ -222,7 +222,7 @@ export const asyncRoutes = [
 
   /** when your routing map is too long, you can split it into small modules **/
   // componentsRouter,
-  frequentRouter,
+  // frequentRouter,
   // relationRouter,
   // chartsRouter,
   // nestedRouter,
