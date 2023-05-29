@@ -95,7 +95,7 @@ def get_expense_by_id(expenseID):
 def get_pending_expense():
       select = expense.loc[expense['applicationState'] == 1]  # 1:待审批; 0:已审批
       if len(select):
-        return jsonify(select.to_json()), 200
+        return jsonify([select.iloc[_].to_dict() for _ in range(len(select))]), 200
       else:
         return jsonify({'message': "There is no pending expense."}), 200
 
