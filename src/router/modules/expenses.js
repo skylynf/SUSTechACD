@@ -46,7 +46,7 @@ const expensesRouter = {
   path: 'searchExpensesAdmin',
     component: () => import('@/views/expenses/admin/index_search_admin.vue'),
   name: 'searchExpensesAdmin',
-  meta: { title: '查询未审批支出', noCache: true , roles: ['admin']}
+  meta: { title: '查询待审批支出', noCache: true , roles: ['admin']}
 },
   ]
 }

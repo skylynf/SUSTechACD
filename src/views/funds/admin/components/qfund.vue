@@ -4,6 +4,7 @@
       <div style="margin:0 0 5px 20px">
         <input type="text" placeholder="请输入user_ID" ref="queryexpenseID">
         <el-button type=“button” @click="changeChart">查询</el-button>
+        <el-button type=“button” @click="outputChart">导出</el-button>
 
       </div>
       <el-checkbox-group v-model="checkboxVal">
@@ -116,8 +117,19 @@
 
           console.log(this.tableData)
         })
+      },
+      outputChart() {
+        var ID = this.$refs.queryexpenseID.value;
+        var url =  'http:';
+        console.log("12345678")
+        axios.get(url).then(response => {
+          var result;
+          // if(ID){
+          // console.log(response.data['items'])
+        })
       }
     },
+
     data() {
       return {
         tableData: [],

@@ -19,7 +19,7 @@
 
 <script>
 
-  import tmu from '../../expenses/admin/components/qfund.vue'
+  import tmu from '../admin/components/qfund.vue'
   import axios from 'axios'
 
   const lineChartData = {
