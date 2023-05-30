@@ -1,11 +1,8 @@
 # CS304 SUSTech_ACD 经费管理系统 Final Report
 
-
-
-
-
 ## 1.	Metrics
-
+使用IDEA插件Static统计各种类型代码行数、文件数量及大小如下：
+![img.png](FinalReport-Pictures/img.png)
 
 
 ## 2.	Documentation
