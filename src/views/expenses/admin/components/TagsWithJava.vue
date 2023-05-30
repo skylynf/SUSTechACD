@@ -1,5 +1,5 @@
 <template>
-  <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+  <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="180px" class="demo-ruleForm">
     <el-form-item label="支出编号" prop="expenseID">
       <el-input v-model="ruleForm.expenseID"></el-input>
     </el-form-item>

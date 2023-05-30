@@ -105,7 +105,8 @@
         });
       },
       outputChart() {
-        const url = 'http://127.0.0.1:5000/api/funds/excel';
+        const fundId = this.$refs.queryexpenseID.value; // 获取输入框中的fundID
+        const url = `http://127.0.0.1:5000/api/excel/funds/${fundId}`;
         const timestamp = Date.now(); // 生成当前时间戳
         const downloadUrl = `${url}?timestamp=${timestamp}`; // 添加随机查询参数
         axios.get(downloadUrl, {

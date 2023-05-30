@@ -1,5 +1,5 @@
 <template>
-  <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+  <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="180px" class="demo-ruleForm">
     <el-form-item label="支出编号" prop="expenseID">
       <el-input v-model="ruleForm.expenseID"></el-input>
     </el-form-item>
@@ -46,14 +46,7 @@
     <el-form-item label="备注" prop="remark">
       <el-input type="textarea" v-model="ruleForm.remark"></el-input>
     </el-form-item>
-    <el-form-item label="申请状态" prop="applicationState">
-      <el-select v-model="ruleForm.applicationState" >
-        <el-option label="未发送" value="0"></el-option>
-        <el-option label="正在申请中" value="1"></el-option>
-        <el-option label="被拒绝打回" value="2"></el-option>
-        <el-option label="申请成功" value="3"></el-option>
-      </el-select>
-    </el-form-item>
+
     <el-form-item>
       <el-button type="primary" @click="onSubmit()">增加</el-button>
       <el-button @click="resetForm('ruleForm')">重置</el-button>
@@ -81,7 +74,7 @@
           category2: '',
           abstract: '',
           remark: '',
-          applicationState: ''
+          applicationState: '0'
         },
         rules: {
           expenseID: [
@@ -109,9 +102,6 @@
             { required: true },
           ],
           remark: [
-            { required: true },
-          ],
-          applicationState: [
             { required: true },
           ]
         }

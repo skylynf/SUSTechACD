@@ -334,7 +334,7 @@ def modify_expense(expenseID):
       return jsonify({'error': f'未找到支出'}), 404
 
 
-@app.route('/api/funds/chart/<int:fundID>', method = ['GET'])
+@app.route('/api/funds/chart/<int:fundID>', methods = ['GET'])
 @cross_origin()
 def generate_fund_chart(fundID):
   filtered_fund = fund.loc[fund['fundID'] == fundID]
@@ -354,6 +354,8 @@ def generate_fund_chart(fundID):
       items[category1] = items[category1] + amount
     else:
       items[category1] = amount
+
+  return jsonify(items), 200
 
 
 
@@ -434,6 +436,7 @@ def export_user_fund(fundIDs):
       items.append(select.iloc[0])
   fund_select = pd.DataFrame(items) # list(zip(_ for _ in items))
 
+  print(fund_select['totalQuota'])
   fund_select['remainQuota'] = fund_select['totalQuota'] - fund_select['usedQuota']
   fund_select['executeRate'] = fund_select['usedQuota'] / fund_select['totalQuota']
   del fund_select['remark']

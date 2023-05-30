@@ -81,6 +81,26 @@ export default {
         this.tableData = [];
 
         result.forEach(item => {
+
+          var applicationStateText;
+          switch (item.applicationState) {
+            case 0:
+              applicationStateText = '未提交';
+              break;
+            case 1:
+              applicationStateText = '审批中';
+              break;
+            case 2:
+              applicationStateText = '被拒绝';
+              break;
+            case 3:
+              applicationStateText = '已通过';
+              break;
+            default:
+              applicationStateText = '';
+              break;
+          }
+
           var tuple = {
             expenseID: item.expenseID,
             expenseName: item.expenseName,
@@ -91,7 +111,7 @@ export default {
             category2: item.category2,
             abstract: item.abstract,
             remark: item.remark,
-            applicationState: item.applicationState,
+            applicationState: applicationStateText
           }
           console.log(tuple.expenseID)
           this.tableData.push(tuple);
