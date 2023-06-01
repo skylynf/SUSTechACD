@@ -211,7 +211,8 @@ def test_get_expense_by_id(self):
 ```
 
 **3.2.2** 测试覆盖率
-使用python库coverage来统计相关信息
+use python's coverage to 
+Using the Python library coverage to gather relevant information.
 ![image-test-backend](FinalReport-Pictures/img_1.png)
 Due to the complexity of certain functions in server.py, 
 such as generating charts or graphical representations 
