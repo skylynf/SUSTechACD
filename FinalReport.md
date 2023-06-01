@@ -1,19 +1,20 @@
 # CS304 SUSTech_ACD 经费管理系统 Final Report
 
 ## 1.	Metrics
-使用IDEA插件Static统计各种类型代码行数、文件数量及大小如下：
+Use the IDEA plug-in Static to count the number of lines of various types of code, the number and size of files as follows:
 ![img.png](FinalReport-Pictures/img.png)
-使用IDEA代码分析功能得到软件包共476个。
+A total of 476 software packages were obtained using the IDEA code analysis function.
 ![img.png](FinalReport-Pictures/img1.png)
-共6个子模块：后端、前端、build、mock、测试、绘图;
+A total of 6 sub-modules: backend, frontend, build, mock, test, drawing;
 
-其中后端分为数据（csv），服务器，测试3个子模块；
+The backend is divided into three sub-modules: data (csv), server, and test;
 
-前端分为api, assets, components, directive, filters, icons, layout, router, store, styles, utils, vendor, view多个子模块。
+The front end is divided into api, assets, components, directive, filters, icons, layout, router, store, styles, utils, vendor, view multiple sub-modules.
 
-后端使用的第三方库有：
+The third-party libraries used by the backend are:
 ![img.png](FinalReport-Pictures/img2.png)
-前端使用的第三方库有：
+The third-party libraries used by the front end are:
+
 "dependencies": {
 "axios": "0.18.1",
 "clipboard": "2.0.4",
@@ -74,17 +75,17 @@
 "vue-template-compiler": "2.6.10"
 }
 
-一共有60个。
+There are 60 in total.
 
-### 可维护性（Maintainability）
-> 使用工具为：SonarLint
-> 对比的open-source 项目为: vue-element-admin
+### Maintainability
+> The tool used is: SonarLint
+> The open-source project for comparison is: vue-element-admin
 
-本项目分析结果：213 issues
+Analysis results of this project: 213 issues
 ![img.png](FinalReport-Pictures/img3.png)
-对比项目分析结果为： 48 issues
+The analysis result of the comparison project is: 48 issues
 ![img.png](FinalReport-Pictures/img4.png)
-可以看到，我们的项目的可维护性是很不错的。
+As you can see, the maintainability of our project is very good.
 
 ## 2.	Documentation
 
@@ -194,6 +195,35 @@ URL: https://github.com/skylynf/SUSTechACD/blob/main/Project%20API%20Document.pd
 
 ![image-test-front2](FinalReport-Pictures/image-test-front2.png)
 
+**3.2.1** 后端测试使用python的unittest, 一个典型的测试方法实现如下
+```python
+def test_get_expense_by_id(self):
+    # 发送 GET 请求并获取响应
+    response = self.app.get('/api/expenses/1')
+    # 验证状态码是否为 200
+    assert response.status_code == 200
+    # 获取响应数据
+    data = response.get_json()
+    # 验证数据内容
+    assert 'error' not in data  # 没有错误信息表示成功
+    assert isinstance(data, dict)  # 数据类型为字典
+    assert 'expenseID' in data  # 包含 expenseID 字段
+```
+
+**3.2.2** 测试覆盖率
+使用python库coverage来统计相关信息
+![image-test-backend](FinalReport-Pictures/img_1.png)
+Due to the complexity of certain functions in server.py, 
+such as generating charts or graphical representations 
+in the frontend, achieving a high test coverage rate has 
+been challenging. However, it should be noted that the 
+majority of the CRUD (Create, Read, Update, Delete) 
+operations have been covered by tests. These tests have 
+proven to be immensely valuable during the development of 
+our applications. While the coverage may not be exhaustive 
+due to the specific nature of certain functionalities, the 
+implemented tests have provided significant support and 
+confidence in the overall robustness of the system
 
 
 ## 4.	Build
