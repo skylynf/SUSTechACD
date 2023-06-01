@@ -24,7 +24,7 @@ module.exports = {
    * In most cases please use '/' !!!
    * Detail: https://cli.vuejs.org/config/#publicpath
    */
-  publicPath: '/',
+  publicPath: '/', // 打包部署时，改为'./'，然后运行在根目录运行npm run build:prod
   outputDir: 'dist',
   assetsDir: 'static',
   lintOnSave:false,

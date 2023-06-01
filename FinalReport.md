@@ -185,17 +185,20 @@ URL: https://github.com/skylynf/SUSTechACD/blob/main/Project%20API%20Document.pd
 
 ### 3.1 Front-end Test
 
-**3.1.1** 前端的测试使用jest完成，Jest是 Facebook 的一套开源的 JavaScript 测试框架， 它自动集成了断言、JSDom、覆盖率报告等开发者所需要的所有测试工具，是一款几乎零配置的测试框架。
+**3.1.1** The front-end testing is completed using Jest, an open-source JavaScript testing framework from Facebook that automatically integrates all the testing tools required by developers such as assertions, JSDom, and coverage reports. It is an almost zero configuration testing framework。
 
-**3.1.2** 测试代码example：
+**3.1.2** Test code example：
 
 ![image-test-front](FinalReport-Pictures/image-test-front.png)
 
-**3.1.3** 测试覆盖率:
+**3.1.3** Test Coverage:
 
 ![image-test-front2](FinalReport-Pictures/image-test-front2.png)
 
+### 3.2 Back-end Test
+
 **3.2.1** 后端测试使用python的unittest, 一个典型的测试方法实现如下
+
 ```python
 def test_get_expense_by_id(self):
     # 发送 GET 请求并获取响应
