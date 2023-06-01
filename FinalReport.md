@@ -211,19 +211,6 @@ def test_get_expense_by_id(self):
 ```
 
 **3.2.2** 测试覆盖率
-使用python库coverage来统计相关信息
-![image-test-backend](FinalReport-Pictures/img_1.png)
-Due to the complexity of certain functions in server.py, 
-such as generating charts or graphical representations 
-in the frontend, achieving a high test coverage rate has 
-been challenging. However, it should be noted that the 
-majority of the CRUD (Create, Read, Update, Delete) 
-operations have been covered by tests. These tests have 
-proven to be immensely valuable during the development of 
-our applications. While the coverage may not be exhaustive 
-due to the specific nature of certain functionalities, the 
-implemented tests have provided significant support and 
-confidence in the overall robustness of the system
 
 使用python库coverage来统计相关信息
 ![image-test-backend](FinalReport-Pictures/img_1.png)
