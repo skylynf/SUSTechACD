@@ -197,7 +197,7 @@ URL: https://github.com/skylynf/SUSTechACD/blob/main/Project%20API%20Document.pd
 
 ### 3.2 Back-end Test
 
-**3.2.1** 后端测试使用python的unittest, 一个典型的测试方法实现如下
+**3.2.1** backend use python's unittest to test, a classical test method can be implemented as follows
 
 ```python
 def test_get_expense_by_id(self):
@@ -213,7 +213,7 @@ def test_get_expense_by_id(self):
     assert 'expenseID' in data  # 包含 expenseID 字段
 ```
 
-**3.2.2** 测试覆盖率
+**3.2.2** test coverage rate 
 use python's coverage to 
 Using the Python library coverage to gather relevant information.
 ![image-test-backend](FinalReport-Pictures/img_1.png)
