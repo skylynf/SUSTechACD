@@ -306,5 +306,29 @@ confidence in the overall robustness of the system
 
 ## 5.	Deployment
 
+1. Introduce the containerization technology/tools/frameworks used in your project.
 
+In our project, the containerization tools are Nginx and WSGI. This solution is small in size, easy to install, fast in response, easy to use, no additional modification to the code, and completely realize the front end and back end separation.
 
+2. The script or related artifacts used for containerization. Briefly introduce how you assigned different services into different
+containers.
+
+For the frontend, when you run __npm run dev__, the vue code will run directly, while when you run __npm run build:prod__, the vue code will be transcribed into html/css/js and stored in the dist folder in the root directory, which is done. This way, the packaged code is decoupled from node.js and can be copied to run on any machine without having to install vue and nodejs.
+
+![build](FinalReport-Pictures/Deployment/1.png)
+
+Here, another computer is simulated as a WSL virtual machine. The frontends are deployed by first installing the Nginx library and then starting the Nginx server by binding a network port (e.g., localhost:9000) to the dist folder path.
+
+![deployment1](FinalReport-Pictures/Deployment/2.png)
+
+For the backend, our programs are written on python's Flask server. However, Flask is intended for development only, so it should be deployed with a WSGI interface. As a result, the server can run automatically and sleep processes when there are no user requests to reduce power consumption.
+
+![deployment2](FinalReport-Pictures/Deployment/3.png)
+
+The reason why we adopt the separation of front and back ends is mainly because the requirements of front and back ends are different. Our front-end packaging and deployment has addressed the issues of time-consuming, error-prone, copy-controlled vue and nodejs; Backend applications need to access the database and can't run without data, so packaging a copy of the database is a very insecure behavior and should not be packaged with the frontend.
+
+3. A proof of successful containerization.
+
+The running results of the program after packaging and deployment are as follows. The UI and various functions are completely the same as without packaging and deployment.
+![result1](FinalReport-Pictures/Deployment/4.png)
+![result2](FinalReport-Pictures/Deployment/5.png)
