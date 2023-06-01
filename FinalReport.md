@@ -119,7 +119,7 @@ URL: https://github.com/skylynf/SUSTechACD/blob/main/%E7%94%A8%E6%88%B7%E7%AB%AF
 
 #### Screenshot
 
->![image-20230530133720531](FinalReport-Pictures\image-20230530133720531.png)
+>![image-20230530133720531](FinalReport-Pictures/image-20230530133720531.png)
 
 
 
@@ -174,7 +174,7 @@ URL: https://github.com/skylynf/SUSTechACD/blob/main/Project%20API%20Document.pd
 
 #### ScreenShot
 
-> ![image-20230530135415322](FinalReport-Pictures\image-20230530135415322.png)
+> ![image-20230530135415322](FinalReport-Pictures/image-20230530135415322.png)
 
 
 
@@ -188,11 +188,11 @@ URL: https://github.com/skylynf/SUSTechACD/blob/main/Project%20API%20Document.pd
 
 **3.1.2** 测试代码example：
 
-![image-test-front](FinalReport-Pictures\image-test-front.png)
+![image-test-front](FinalReport-Pictures/image-test-front.png)
 
 **3.1.3** 测试覆盖率:
 
-![image-test-front2](FinalReport-Pictures\image-test-front2.png)
+![image-test-front2](FinalReport-Pictures/image-test-front2.png)
 
 
 
@@ -231,7 +231,7 @@ URL: https://github.com/skylynf/SUSTechACD/blob/main/Project%20API%20Document.pd
 
    - Part of Snapshot:
 
-     >  ![image-20230530141327691](FinalReport-Pictures\image-20230530141327691.png)
+     >  ![image-20230530141327691](FinalReport-Pictures/image-20230530141327691.png)
 
    - The `package.json` file is a manifest file that contains metadata about your project and its dependencies. It is also used to define various scripts that can be executed using npm.
 
@@ -239,7 +239,7 @@ URL: https://github.com/skylynf/SUSTechACD/blob/main/Project%20API%20Document.pd
 
    - Part of Snapshot:
 
-     >![image-20230530141136952](FinalReport-Pictures\image-20230530141136952.png)
+     >![image-20230530141136952](FinalReport-Pictures/image-20230530141136952.png)
 
 
 
