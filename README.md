@@ -30,11 +30,12 @@ We have rigorously tested and improved this system, including:
 
 ## Getting Started
 
-To get started with the budget management system, follow the installation and usage instructions in the [documentation](/docs).
+To get started with the budget management system, follow the installation and usage instructions in the [documentation](/FinalReport.md).
+For users, please visit the [User Guide](/用户端文档.md).
 
 ## API Reference
 
-For API reference and integration details, consult the [API documentation](/api).
+For API reference and integration details, consult the [API documentation](/Project%20API%20Document.md).
 
 ## License
 
